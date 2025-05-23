@@ -1,22 +1,20 @@
 import jwt from 'jsonwebtoken';
 import user from '../models/User.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const protect = async (req, res, next) => {
     try {
-        let token;
-
-        // Check for token in headers
-        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-            token = req.headers.authorization.split(' ')[1];
-        }
+        const token = req.cookies.token;
 
         if (!token) {
-            return res.status(401).json({ message: 'Not authorized to access this route' });
+            return res.status(401).json({ message: 'No Token Found' });
         }
 
         try {
             // Verify token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
             // Get user from token
             const USER = await user.findById(decoded.userId).select('-Password');

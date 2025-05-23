@@ -1,14 +1,21 @@
 import express from "express";
 import cors from 'cors';
 import dotenv from "dotenv";
+import cookieParser from 'cookie-parser';
 import auth from './routes/auth.js';
 import DBConnection from './database/db.js';
-
+import problems from './routes/problems.js';
+import upload from './routes/upload.js';
 
 dotenv.config();
 DBConnection();
 
 const app = express(); // creates an express application
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // CORS configuration
 app.use(cors({
@@ -18,13 +25,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 // Routes
 app.use('/', auth); 
-
+app.use('/problems', problems);
+app.use('/upload', upload);
 // Basic route
 // app.get('/', (req, res) => {
 //     res.send('Welcome to the API')

@@ -29,7 +29,7 @@ const Navbar = () => {
             <div className="hidden md:flex items-center space-x-8">
   
               <div className="flex items-center space-x-2">
-                <button className="text-white bg-red-500 rounded hover:bg-red-500/80 px-2" onClick={() => navigate('/home')}>
+                <button className="text-white  rounded hover:text-red-500 px-2" onClick={() => navigate('/home')}>
                   Home
                 </button>
                
@@ -43,8 +43,8 @@ const Navbar = () => {
             <div className="md:hidden pt-4 pb-3 space-y-3">
               <MobileNavLinks closeMenu={closeMenu} />
               <div className="flex flex-col space-y-2 pt-2 border-t border-gray-500">
-                <button className=" bg-red-500 text-white hover:bg-red-500/80 py-1 rounded-md">
-                  Sign In
+                <button className="  text-white hover:bg-red-500/80 py-1 rounded-md" onClick={() => navigate('/home')}>
+                  Home
                 </button>
               </div>
             </div>

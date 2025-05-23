@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 export const signup = async (req, res) => {
     try {
         const {FirstName, LastName, Email, Username, Password, PhoneNumber} = req.body;
-        
+        //check if all fields are provided
         if(!FirstName || !LastName || !Email || !Username || !Password || !PhoneNumber) {
             return res.status(400).json({
                 message: "Please provide all required fields",
@@ -14,16 +14,19 @@ export const signup = async (req, res) => {
             });
         }
 
+        //check if username already exists
         const UsernameExists = await User.findOne({Username});
         if(UsernameExists) {
             return res.status(400).json({message: "Username already exists"});
         }
 
+        //check if email already exists
         const EmailExists = await User.findOne({Email});
         if(EmailExists) {
             return res.status(400).json({message: "Email already exists"});
         }
 
+        //hash password // to prevent rainbow table attack uncommon passwords
         const hashedPassword = await bcrypt.hash(Password, 10);
         
         const newUser = await User.create({
@@ -41,9 +44,16 @@ export const signup = async (req, res) => {
             {expiresIn: '1h'}
         );
 
+        // Set cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000 // 1 hour
+        });
+
         res.status(200).json({
             message: "You have successfully Signed Up",
-            token,
             user: {
                 id: newUser._id,
                 username: newUser.Username,
@@ -88,9 +98,16 @@ export const signin = async (req, res) => {
             {expiresIn: '1h'}
         );
 
+        // Set cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000 // 1 hour
+        });
+
         res.status(200).json({
             message: "Login successful",
-            token,
             user: {
                 id: user._id,
                 username: user.Username,
@@ -101,5 +118,21 @@ export const signin = async (req, res) => {
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({message: "Error during login"});
+    }
+};
+
+// Logout Controller
+export const logout = async (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict'
+        });
+        
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.error('Logout error:', error);
+        res.status(500).json({ message: 'Error during logout' });
     }
 }; 

@@ -207,7 +207,7 @@ export const Signup = () => {
                                     {isLoading ? 'Creating...' : 'Create Account'}
                                 </button>
                                 <p className="text-sm mt-4 text-center text-gray-400">
-                                    Already have an account? <Link to="/signin" className="text-white hover:text-red-400 font-medium ml-1">Sign in</Link>
+                                    Already have an account? <Link to="/" className="text-white hover:text-red-400 font-medium ml-1">Sign in</Link>
                                 </p>
                             </div>
                         </form>
