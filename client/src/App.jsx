@@ -5,6 +5,8 @@ import Home from './pages/Home.jsx'
 import {Signin} from './pages/Signin.jsx'
 import {Signup} from './pages/Signup.jsx'
 import Problems from './pages/Problems.jsx'
+import Profile from './pages/Profile.jsx'
+import ProblemDetails from './pages/ProblemDetails.jsx'
 
 function App() {
  
@@ -17,6 +19,10 @@ function App() {
           <Route path='/home' element={<Home />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/problems' element={<Problems />} />
+          <Route path='/problems/:id' element={<ProblemDetails />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/logout' element={<Home />} />
+          <Route path='/run' element={<Home />} />
         </Routes>
       </Router>
     </>

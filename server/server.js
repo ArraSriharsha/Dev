@@ -6,6 +6,8 @@ import auth from './routes/auth.js';
 import DBConnection from './database/db.js';
 import problems from './routes/problems.js';
 import upload from './routes/upload.js';
+import profile from './routes/profile.js';
+import run from './routes/run.js';
 
 dotenv.config();
 DBConnection();
@@ -29,6 +31,8 @@ app.use(cors({
 app.use('/', auth); 
 app.use('/problems', problems);
 app.use('/upload', upload);
+app.use('/profile', profile);
+app.use('/run', run);
 // Basic route
 // app.get('/', (req, res) => {
 //     res.send('Welcome to the API')

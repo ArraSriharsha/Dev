@@ -8,9 +8,10 @@ const userSchema = new mongoose.Schema({
    Username: {type: String, required: true, unique: true},
    Password: {type: String, required: true},
    PhoneNumber: {type: String, required: true},
-   Role: {type: String, required: true, default: 'user'},
+   Role: {type: String, required: true, default: 'User'},
+   
 });
-
+userSchema.set('timestamps', true);
 const user = mongoose.model('user', userSchema);
 
 export default user;

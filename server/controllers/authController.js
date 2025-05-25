@@ -43,7 +43,6 @@ export const signup = async (req, res) => {
             process.env.SECRET_KEY, 
             {expiresIn: '1h'}
         );
-
         // Set cookie
         res.cookie('token', token, {
             httpOnly: true,
@@ -97,7 +96,7 @@ export const signin = async (req, res) => {
             process.env.SECRET_KEY,
             {expiresIn: '1h'}
         );
-
+    
         // Set cookie
         res.cookie('token', token, {
             httpOnly: true,

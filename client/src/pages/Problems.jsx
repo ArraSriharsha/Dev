@@ -132,8 +132,12 @@ const Problems = () => {
                 </div>
 
                 {isLoading ? (
-                    <div className="flex items-center justify-center h-[60vh]">
+                    <div className="flex items-center justify-center gap-4 h-[60vh]">
                         <Loader2 className="h-8 w-8 animate-spin text-red-500" />
+                        <div className="flex flex-col items-center justify-center gap-2">
+                            <h1 className="text-2xl font-semibold text-gray-200">Loading Problems</h1>
+                            <p className="text-sm text-gray-400">This may take a few seconds...</p>
+                        </div>
                     </div>
                 ) : problems.length === 0 ? (
                     <div className="text-center text-xl py-8 text-white-500">
@@ -150,7 +154,7 @@ const Problems = () => {
                                 >
                                     <div className="flex justify-between items-center">
                                         <div className="flex-1">
-                                            <h2 className="text-xl text-black  group-hover:text-red-500 transition-colors">
+                                            <h2 className="text-xl text-black group-hover:text-red-500 transition-colors">
                                                 {problem.title}
                                             </h2>
                                             <p className="text-gray-500 mt-1 line-clamp-1">
@@ -175,7 +179,7 @@ const Problems = () => {
                                 >
                                     <ChevronLeft className="h-5 w-5" />
                                 </button>
-                                <span className="text-whie">
+                                <span className="text-white">
                                     Page {currentPage} of {totalPages}
                                 </span>
                                 <button

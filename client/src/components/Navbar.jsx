@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, User } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 //import { Button } from './ui/button'
 
@@ -65,6 +65,9 @@ const Navbar = () => {
         </Link>
         <Link to="/leaderboard" className="hover:text-red-500 transition-colors">
           Leaderboard
+        </Link>
+        <Link to="/profile" className="hover:text-red-500 transition-colors">
+          <User size={24} />
         </Link>
       </>
     );

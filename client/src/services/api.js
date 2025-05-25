@@ -22,7 +22,28 @@ export const getProblems = async (params = {}) => {
   return response;
 };
 
+
+export const getProblemById = async (id) => {
+  const response = await api.get(`/problems/${id}`);
+  return response;
+};
+
+export const runCode = async (data) => {
+  const response = await api.post('/run', data);
+  return response;
+};
+
+export const submitSolution = async (data) => {
+  const response = await api.post('/submit', data);
+  return response;
+};
+
 export const logout = async () => {
   const response = await api.post('/logout');
+  return response;
+};
+
+export const getProfile = async () => {
+  const response = await api.get('/profile');
   return response;
 };

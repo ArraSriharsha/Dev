@@ -1,9 +1,10 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import { ArrowRight, Trophy, Users, Code } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Home = () => {
+    const navigate = useNavigate();
     // Static featured problems
     const featuredProblems = [
         {
@@ -47,7 +48,7 @@ const Home = () => {
                     <button size="lg" className="bg-red-500 rounded-md hover:bg-red-500/90 text-white px-8">
                         Get Started
                     </button>
-                    <button size="lg" variant="outline" className="border-2 border-red-500 rounded-md bg-white text-red-500 hover:bg-red-100 px-8">
+                    <button size="lg" variant="outline" className="border-2 border-red-500 rounded-md bg-white text-red-500 hover:bg-red-100 px-8" onClick={() => navigate('/problems')}>
                         Explore Problems 
                     </button>
                 </div>
