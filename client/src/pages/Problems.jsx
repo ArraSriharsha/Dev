@@ -21,10 +21,10 @@ const Problems = () => {
             setDebouncedSearch(searchQuery);
         }, 500);
 
-        return () => clearTimeout(timer);
+        return () => clearTimeout(timer);  // cleanup function runs when component unmounts(runs previous effect's cleanup function before running the new effect)
     }, [searchQuery]);
 
-    const fetchProblems = useCallback(async () => {
+    const fetchProblems = useCallback(async () => {  // can wrap inside useeffect function as well (everytime a new function is created, a new reference is created)
         try {
             setIsLoading(true);
             const response = await getProblems({
@@ -64,8 +64,8 @@ const Problems = () => {
     };
 
     const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-        setCurrentPage(1);
+        setSearchQuery(e.target.value); //e.target is the input element // also this triggers the useEffect hook(debounce)
+        setCurrentPage(1);               //reset to first page when user types in search bar
     };
 
     const handleDifficultyChange = (difficulty) => {
@@ -98,12 +98,13 @@ const Problems = () => {
         <div className="min-h-screen bg-gradient-to-b from-black to-red-400 text-white">
             <Navbar />
             <div className="container mx-auto px-4 py-8">
+
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <h1 className="text-3xl font-semibold text-white">
                         Problems
                     </h1>
                     <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-                        <div className="relative">
+                        <div className="relative"> {/* relative wrt to the parent div of the search icon */}
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
                             <input
                                 type="text"
@@ -118,11 +119,10 @@ const Problems = () => {
                                 <button
                                     key={difficulty}
                                     onClick={() => handleDifficultyChange(difficulty)}
-                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                                        selectedDifficulty === difficulty
+                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${selectedDifficulty === difficulty
                                             ? getDifficultyColor(difficulty)
                                             : 'bg-black border border-gray-800 hover:border-white text-gray-400'
-                                    }`}
+                                        }`}
                                 >
                                     {difficulty}
                                 </button>
@@ -169,11 +169,11 @@ const Problems = () => {
                             ))}
                         </div>
 
-                        {/* Pagination */}
+                        {/* Pagination only if there are more than 1*/}
                         {totalPages > 1 && (
                             <div className="flex justify-center items-center gap-4 mt-8">
                                 <button
-                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} //prev => Math.max(prev - 1, 1) is a function that returns the maximum of the previous page and 1.React automatically passes the previous value of the state variable to the function.
                                     disabled={currentPage === 1}
                                     className="p-2 rounded-lg bg-black border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:border-red-500/50 transition-colors"
                                 >

@@ -6,7 +6,7 @@ dotenv.config();
 
 export const protect = async (req, res, next) => {
     try {
-        const token = req.cookies.token;
+        const token = req.cookies.token; // cookies are sent by the browser in the request *header*
 
         if (!token) {
             return res.status(401).json({ message: 'No Token Found' });

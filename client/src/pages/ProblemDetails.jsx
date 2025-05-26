@@ -6,7 +6,7 @@ import { Play, Send, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 
 const ProblemDetails = () => {
-    const { id } = useParams();
+    const { id } = useParams(); // comes from the url(react router dom) must use the same name as the route parameter.
     const navigate = useNavigate();
     const [problem, setProblem] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -159,8 +159,8 @@ const ProblemDetails = () => {
                 <Navbar />
                 <div className="container mx-auto px-4 py-8">
                     <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-                        <div className="text-2xl text-white">{error}</div>
-                        {error.includes('Sign in') && (
+                        <div className="text-2xl text-white">{error}</div>  {/* only if sign in is included in the error message */}
+                        {error.includes('Sign in') && (  
                             <button
                                 onClick={() => navigate('/')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
@@ -201,6 +201,7 @@ const ProblemDetails = () => {
                     style={{ gridTemplateColumns: `${leftWidth}% 1fr` }}
                 >
                     {/* Problem Description */}
+                    <div className="border border-red-600 rounded-lg overflow-auto h-full">
                     <div className=" overflow-auto">
                         <div className="bg-black/50 border border-red-500 rounded-lg p-4  ">
                             <div className="flex items-center justify-between mb-4">
@@ -255,6 +256,7 @@ const ProblemDetails = () => {
                             </div>
                         </div>
                     </div>
+                    </div>
 
                     {/* Resizer */}
                     <div
@@ -269,6 +271,7 @@ const ProblemDetails = () => {
                     </div>
 
                     {/* Code Editor Section */}
+                    
                     <div className="space-y-4 h-full overflow-auto relative">
                         <div className="bg-black/50 border border-red-500 rounded-lg p-4">
                             <div className="flex items-center justify-between mb-4">

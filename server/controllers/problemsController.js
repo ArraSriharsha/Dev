@@ -2,15 +2,15 @@ import Problem from '../models/Problems.js';
 
 export const getProblems = async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 5;
-        const difficulty = req.query.difficulty;
+        const page = parseInt(req.query.page) || 1; // converts string to number; if not provided, defaults to 1
+        const limit = parseInt(req.query.limit) || 5; // converts string to number; if not provided, defaults to 5
+        const difficulty = req.query.difficulty;  // usuallt get request has query params unless modified by a middleware cannot destructure without req.query
         const search = req.query.search;
         const sortBy = req.query.sortBy || 'title';
         const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1;
 
         // Build query
-        let query = {};
+        let query = {}; // let,var doesn't need to be initialized unlike const
         if (difficulty) {
             query.difficulty = difficulty;
         }
