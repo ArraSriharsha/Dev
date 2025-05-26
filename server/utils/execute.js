@@ -12,7 +12,7 @@ if(!fs.existsSync(outputPath)) {
 }
 console.log(outputPath);  // /Users/harsha/Desktop/OJ/server/utils/outputs
 // filepath-/Users/harsha/Desktop/OJ/server/utils/codes/ef5e8abf-7625-40a4-8107-dec079e628a6.cpp
-export const executeCpp = async (filepath,language) => {
+export const executeCpp = async (filepath,language,inputfilePath) => {
     const jobid = path.basename(filepath).split(".")[0]; //basename gives filename without directory and split gives array of filename and extension
     // jobid-ef5e8abf-7625-40a4-8107-dec079e628a6
     const outPath = path.join(outputPath, `${jobid}.out`);
@@ -21,19 +21,19 @@ export const executeCpp = async (filepath,language) => {
     let command;
     switch(language){
         case 'c':
-            command = `gcc ${filepath} -o ${outPath} && ${outPath}`;
+            command = `gcc ${filepath} -o ${outPath} && ${outPath} < ${inputfilePath}`;
             break;
         case 'cpp':
-            command = `g++ ${filepath} -o ${outPath} && ${outPath}`;
+            command = `g++ ${filepath} -o ${outPath} && ${outPath} < ${inputfilePath}`;
             break;
         case 'py':
-            command = `python3 ${filepath}`;
+            command = `python3 ${filepath} < ${inputfilePath}`;
             break;
         case 'js':
-            command = `node ${filepath}`;
+            command = `node ${filepath} < ${inputfilePath}`;
             break;
         case 'java':
-            command = `java ${filepath}`;
+            command = `java ${filepath} < ${inputfilePath}`;
             break;
         default:
             return res.status(400).json({ error: 'Invalid language' });

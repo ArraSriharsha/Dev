@@ -18,7 +18,7 @@ const ProblemDetails = () => {
     const [output, setOutput] = useState(null);
     const [input, setInput] = useState('');
     const [isDragging, setIsDragging] = useState(false);
-    const [leftWidth, setLeftWidth] = useState(40);
+    const [leftWidth, setLeftWidth] = useState(35);
     const containerRef = useRef(null);
     const [outputError, setOutputError] = useState(null);
 
@@ -53,16 +53,17 @@ const ProblemDetails = () => {
 
 
 
-    const handleMouseDown = (e) => {
-        setIsDragging(true);
-        e.preventDefault();
+    const handleMouseDown = (e) => {  // on down,is basically a hold event and onUp is the release event
+        // here the event is the mouse down event hence it prevents the default behavior of the event(in this case, the default behavior is to select the text)
+        setIsDragging(true);  
+        e.preventDefault(); 
     };
 
     const handleMouseMove = (e) => {
         if (!isDragging || !containerRef.current) return;
 
         const container = containerRef.current;
-        const containerRect = container.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();  // returns an object with the following properties: left, top, right, bottom, width, height
         const newLeftWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
 
         // Limit the width between 30% and 70%
@@ -77,7 +78,7 @@ const ProblemDetails = () => {
 
     useEffect(() => {
         if (isDragging) {
-            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mousemove', handleMouseMove); // here the event is the mouse move event and the handleMouseMove is the function that is called when the event is triggered
             document.addEventListener('mouseup', handleMouseUp);
         }
         return () => {
@@ -91,8 +92,9 @@ const ProblemDetails = () => {
         setOutput(null);
         try {
             const response = await runCode({
-                code,
+                code:code,
                 language: selectedLanguage,
+                input:input
             });
 
             // Handle the response data
@@ -132,7 +134,7 @@ const ProblemDetails = () => {
         } catch (error) {
             setOutput({
                 error: true,
-                message: error.response?.data?.message || 'Failed to run code'
+                message: error.response?.data?.error || 'Failed to run code'
             });
         } finally {
             setIsRunning(false);
@@ -197,15 +199,15 @@ const ProblemDetails = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-black to-red-300 text-white">
             <Navbar />
-            <div className="container mx-auto px-4 py-8 h-[calc(100vh-4rem)]">
+            <div  className="container mx-auto px-1 py-6 h-[calc(100vh-4rem)]">
                 <div
                     ref={containerRef}
                     className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative h-full"
-                    style={{ gridTemplateColumns: `${leftWidth}% 1fr` }}
+                    style={{ gridTemplateColumns: `${leftWidth}% 1fr` }} // one fraction of the width is the left width and the other fraction is the right width
                 >
                     {/* Problem Description */}
                     <div className="border border-red-600 rounded-lg overflow-auto h-full">
-                        <div className=" overflow-auto">
+                        
                             <div className="bg-black/50 border border-red-500 rounded-lg p-4  ">
                                 <div className="flex items-center justify-between mb-4">
                                     <h1 className="text-xl font-semibold text-gray-200">{problem?.title}</h1>
@@ -257,7 +259,7 @@ const ProblemDetails = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        
                     </div>
 
                     {/* Resizer */}
@@ -352,7 +354,7 @@ const ProblemDetails = () => {
                                         <h2 className="text-base font-semibold text-gray-200 mb-2">Output</h2>
                                         <div className="h-[100px] bg-black/30 border border-red-400 rounded p-2 overflow-auto">
                                             {output ? (
-                                                <pre className={`text-sm whitespace-pre-wrap ${output.error ? 'text-red-500' : 'text-green-400'
+                                                <pre className={`text-base whitespace-pre-wrap ${output.error ? 'text-red-500' : 'text-green-400'
                                                     }`}>
                                                     {output.error ? String(output.message) : String(output.output)}
                                                 </pre>
