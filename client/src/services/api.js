@@ -22,6 +22,10 @@ export const getProblems = async (params = {}) => {
   return response;
 };
 
+export const uploadProblem = async (data) => {
+  const response = await api.post('/upload', data);
+  return response;
+};
 
 export const getProblemById = async (id) => {
   const response = await api.get(`/problems/${id}`);
@@ -33,7 +37,7 @@ export const runCode = async (data) => {
   return response;
 };
 
-export const submitSolution = async (data) => {
+export const submitCode = async (data) => {
   const response = await api.post('/submit', data);
   return response;
 };

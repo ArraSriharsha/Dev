@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import { getProblemById, runCode } from '../services/api';
 import { Play, Send, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import Editor from '@monaco-editor/react';
+import { submitCode } from '../services/api';
 
 const ProblemDetails = () => {
     const { id } = useParams(); // comes from the url(react router dom) must use the same name as the route parameter.
@@ -145,14 +146,14 @@ const ProblemDetails = () => {
         setIsSubmitting(true);
         setOutput(null);
         try {
-            const response = await api.post('/submit', {
+            const response = await submitCode({
                 problemName: id,
                 code,
                 language: selectedLanguage,
             });
             setOutput(response.data);
         } catch (error) {
-            setError(error.response?.data?.message || 'Failed to submit code');
+            setError(error.response?.data?.message || 'Failed to submit code'); // if the error is not in the response, then set the error to the error message
         } finally {
             setIsSubmitting(false);
         }

@@ -30,9 +30,10 @@ app.use(cors({
 // Routes
 app.use('/', auth); 
 app.use('/problems', problems);
-app.use('/upload', upload);
+app.use('/upload',upload);
 app.use('/profile', profile);
 app.use('/run', run);
+
 // Basic route
 // app.get('/', (req, res) => {
 //     res.send('Welcome to the API')

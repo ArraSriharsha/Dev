@@ -11,7 +11,10 @@ const problemSchema = new mongoose.Schema({
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], required: true },
   description: { type: String, required: true },
   examples: [exampleSchema],
-  constraints: [{ type: String, required: true }]
+  constraints: [{ type: String, required: true }],
+  testCasesInputPath: { type: String, required: false },
+  testCasesOutputPath: { type: String, required: false },
+  testCaseCount: { type: Number, default: 0 }
 }, {
   timestamps: true
 });

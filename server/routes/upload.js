@@ -1,8 +1,11 @@
 import express from 'express';
-import { uploadproblem } from '../controllers/uploadController.js';
-
+import { uploadProblem } from '../controllers/uploadProblems.js';
+import uploadfile from '../middleware/middleupload.js';
 const router = express.Router();
 
-router.post('/', uploadproblem);
+router.post('/', uploadfile.fields([
+    { name: 'inputFile', maxCount: 1 },
+    { name: 'outputFile', maxCount: 1 }
+]), uploadProblem);
 
 export default router;

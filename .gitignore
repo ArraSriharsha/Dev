@@ -19,6 +19,8 @@ dist-ssr
 codes
 outputs
 inputs
+testcases
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
