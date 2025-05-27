@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getProblemById, runCode } from '../services/api';
-import { Play, Send, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play, Send, Loader2, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import { submitCode } from '../services/api';
 
@@ -21,7 +21,9 @@ const ProblemDetails = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [leftWidth, setLeftWidth] = useState(35);
     const containerRef = useRef(null);
-    const [outputError, setOutputError] = useState(null);
+    const [submitOutput, setSubmitOutput] = useState(null);
+    const [showToast, setShowToast] = useState(false);
+    const toastTimeoutRef = useRef(null);
 
     const languageOptions = [
         { value: 'c', label: 'C' },
@@ -52,7 +54,24 @@ const ProblemDetails = () => {
         fetchProblem();
     }, [id]);
 
+    useEffect(() => {
+        return () => {
+            if (toastTimeoutRef.current) {
+                clearTimeout(toastTimeoutRef.current);
+            }
+        };
+    }, []);
 
+    const showToastMessage = (message) => {
+        setSubmitOutput(message);
+        setShowToast(true);
+        if (toastTimeoutRef.current) {
+            clearTimeout(toastTimeoutRef.current);
+        }
+        toastTimeoutRef.current = setTimeout(() => {
+            setShowToast(false);
+        }, 3000);
+    };
 
     const handleMouseDown = (e) => {  // on down,is basically a hold event and onUp is the release event
         // here the event is the mouse down event hence it prevents the default behavior of the event(in this case, the default behavior is to select the text)
@@ -99,37 +118,34 @@ const ProblemDetails = () => {
             });
 
             // Handle the response data
-            if (typeof response.data === 'object') {
-                if (response.data.output.error || response.data.output.stderr) {
-                    let errorMessage = '';
-                    if (response.data.output.error) {
-                        errorMessage += typeof response.data.output.error === 'string'
-                            ? response.data.output.error
-                            : JSON.stringify(response.data.output.error);
-                    }
-                    if (response.data.output.stderr) {
-                        if (errorMessage) errorMessage += '\n\n';
-                        errorMessage += typeof response.data.output.stderr === 'string'
-                            ? response.data.output.stderr
-                            : JSON.stringify(response.data.output.stderr);
-                    }
-                    setOutput({
-                        error: true,
-                        message: errorMessage
-                    });
-                } else if (response.data.output.output) {
+            if(response.data.error){
+                setOutput({
+                    error: true,
+                    message: response.data.error
+                });
+            } else if (response.data.output.error) {
+                setOutput({
+                    error: true,
+                    message: response.data.output.error
+                });
+            } else if (response.data.output.stderr) {
+                if(response.data.output.stdout){
                     setOutput({
                         error: false,
-                        output: typeof response.data.output.output === 'string'
-                            ? response.data.output.output
-                            : JSON.stringify(response.data.output.output)
+                        output: response.data.output.stdout,
+                        stderr: response.data.output.stderr
+                    });
+                }
+                else{
+                    setOutput({
+                        error: true,
+                        message: response.data.output.stderr
                     });
                 }
             } else {
-                // If response.data is a string
                 setOutput({
                     error: false,
-                    output: response.data
+                    output: response.data.output.stdout
                 });
             }
         } catch (error) {
@@ -147,13 +163,33 @@ const ProblemDetails = () => {
         setOutput(null);
         try {
             const response = await submitCode({
-                problemName: id,
+                problemId: id,
                 code,
                 language: selectedLanguage,
             });
-            setOutput(response.data);
+            if(response.data.error){
+                showToastMessage({
+                    error: true,
+                    message: response.data.error
+                });
+            }
+            else if(response.data.allPassed){
+                showToastMessage({
+                    error: false,
+                    message: `Accepted ${response.data.totalTestCasesPassed} / ${response.data.totalTestCases} Testcases Passed`
+                });
+            }
+            else{
+                showToastMessage({
+                    error: false,
+                    message: `Wrong Answer ${response.data.totalTestCasesPassed} / ${response.data.totalTestCases} Testcases Passed`
+                });
+            }
         } catch (error) {
-            setError(error.response?.data?.message || 'Failed to submit code'); // if the error is not in the response, then set the error to the error message
+            showToastMessage({
+                error: true,
+                message: error.response?.data?.error || error.response?.data?.message || 'Failed to submit code'
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -200,6 +236,21 @@ const ProblemDetails = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-black to-red-300 text-white">
             <Navbar />
+            {showToast && submitOutput && (
+                <div className={`fixed top-4 right-4 z-50 transform transition-all duration-300 ease-in-out ${showToast ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}>
+                    <div className={`flex items-center p-4 rounded-lg shadow-lg ${
+                        submitOutput.error || submitOutput.message.includes('Wrong Answer') ? 'bg-red-500' : 'bg-green-500'
+                    } text-white`}>
+                        <span className="flex-1">{submitOutput.message}</span>
+                        <button 
+                            onClick={() => setShowToast(false)}
+                            className="ml-4 hover:bg-white/20 rounded-full p-1 transition-colors"
+                        >
+                            <X size={16} />
+                        </button>
+                    </div>
+                </div>
+            )}
             <div  className="container mx-auto px-1 py-6 h-[calc(100vh-4rem)]">
                 <div
                     ref={containerRef}
@@ -355,9 +406,13 @@ const ProblemDetails = () => {
                                         <h2 className="text-base font-semibold text-gray-200 mb-2">Output</h2>
                                         <div className="h-[100px] bg-black/30 border border-red-400 rounded p-2 overflow-auto">
                                             {output ? (
-                                                <pre className={`text-base whitespace-pre-wrap ${output.error ? 'text-red-500' : 'text-green-400'
-                                                    }`}>
-                                                    {output.error ? String(output.message) : String(output.output)}
+                                                <pre className={`text-base whitespace-pre-wrap ${output.error ? 'text-red-500' : 'text-green-400'}`}>
+                                                    {output.error ? String(output.message) : 
+                                                     output.stderr ? 
+                                                        (output.output ? 
+                                                            <>{String(output.output)}<span className='text-red-500'>{output.stderr}</span></> 
+                                                            : <span className='text-red-500'>{String(output.stderr)}</span>) 
+                                                        :  String(output.output)}
                                                 </pre>
                                             ) : (
                                                 <div className="text-gray-400 text-sm">Run your code to see output</div>

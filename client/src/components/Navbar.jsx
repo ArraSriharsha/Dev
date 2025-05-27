@@ -97,6 +97,9 @@ const Navbar = () => {
         >
           Leaderboard
         </Link>
+        <Link to="/profile" className="block hover:text-red-500 transition-colors py-2">
+          Profile
+        </Link>
       </>
     );
   };

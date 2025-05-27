@@ -8,6 +8,7 @@ import problems from './routes/problems.js';
 import upload from './routes/upload.js';
 import profile from './routes/profile.js';
 import run from './routes/run.js';
+import submit from './routes/submit.js';
 
 dotenv.config();
 DBConnection();
@@ -33,6 +34,7 @@ app.use('/problems', problems);
 app.use('/upload',upload);
 app.use('/profile', profile);
 app.use('/run', run);
+app.use('/submit', submit);
 
 // Basic route
 // app.get('/', (req, res) => {

@@ -179,7 +179,7 @@ export const updateProblem = async (req, res) => {
 
             const currentDir = process.cwd();
             const dirpath = path.dirname(currentDir);
-            const problemDir = path.join(dirpath, 'testcases', problemId);
+            const problemDir = path.join(dirpath, 'testcases', newproblem.title);
 
             // Move files to problem-specific directory
             const inputFilePath = path.join(problemDir, 'input.txt');

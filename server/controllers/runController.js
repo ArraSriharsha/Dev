@@ -1,6 +1,7 @@
 import { generateFile } from "../utils/generateFile.js";
 import { executeCpp } from "../utils/execute.js";
 import { generateInputFile } from "../utils/generateInputFile.js";
+import { evaluateSubmission } from "../services/compilerService.js";
 
 export const runCode = async (req, res) => {
     const { code, language,input } = req.body;
@@ -16,6 +17,19 @@ export const runCode = async (req, res) => {
         res.status(200).json({ filepath, output });
     } catch (error) {
         console.error("Error in running code:", error.message);
+        return res.status(500).json({ 
+            success: false,
+            error: error.message 
+        });
+    }
+};
+export const submitCode = async (req, res) => {
+    const { problemId, code, language } = req.body;
+    try {
+        const result = await evaluateSubmission(problemId, code, language);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("Error in submitting code:", error.message);
         return res.status(500).json({ 
             success: false,
             error: error.message 
