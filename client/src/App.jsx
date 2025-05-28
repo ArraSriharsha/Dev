@@ -2,15 +2,14 @@ import { useState } from 'react'
 import './index.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home.jsx'
-import {Signin} from './pages/Signin.jsx'
-import {Signup} from './pages/Signup.jsx'
+import { Signin } from './pages/Signin.jsx'
+import { Signup } from './pages/Signup.jsx'
 import Problems from './pages/Problems.jsx'
 import Profile from './pages/Profile.jsx'
 import ProblemDetails from './pages/ProblemDetails.jsx'
+import Submissions from './pages/Submissions.jsx'
 
 function App() {
- 
-
   return (
     <>
       <Router>
@@ -23,6 +22,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/logout' element={<Home />} />
           <Route path='/run' element={<Home />} />
+          <Route path='/submissions' element={<Submissions />} />
         </Routes>
       </Router>
     </>

@@ -1,27 +1,22 @@
 import React from "react";
 import { Tooltip } from "@material-tailwind/react";
-import {House,Code,CircleUser,SquarePen,LogOut,Send} from 'lucide-react';
+import {House,Code,CircleUser,SquarePen} from "lucide-react";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {logout} from "../services/api.js"
+
 const navItems = [
   { to: "/home", icon: House, label: "Home" },
   { to: "/problems", icon: Code, label: "Problems" },
   { to: "/profile", icon: CircleUser, label: "Profile" },
-  { to: "/submissions", icon: Send, label: "Submissons" },
+  { to: "#", icon: SquarePen, label: "Edit Details" },
 ];
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
- const handleLogout = async () => {
-  try {
-    await logout();
-    navigate("/");
-  } catch (error) {
-    console.error("Logout failed:", error);
-  }
-}
+  const handleLogout = () => {
+    navigate('/');
+  };
 
   return (
     <div className="flex py-3">
@@ -50,7 +45,7 @@ const Sidebar = () => {
             className="flex items-center justify-center w-12 h-12 rounded-xl text-gray-400 hover:bg-white hover:text-red-500 transition-colors"
             onClick={handleLogout}
           >
-            <LogOut className="h-7 w-7" />
+            <ArrowLeftOnRectangleIcon className="h-7 w-7" />
           </button>
         </Tooltip>
       </div>

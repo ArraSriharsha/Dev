@@ -9,6 +9,7 @@ import upload from './routes/upload.js';
 import profile from './routes/profile.js';
 import run from './routes/run.js';
 import submit from './routes/submit.js';
+import submission from './routes/submission.js';
 
 dotenv.config();
 DBConnection();
@@ -35,7 +36,7 @@ app.use('/upload',upload);
 app.use('/profile', profile);
 app.use('/run', run);
 app.use('/submit', submit);
-
+app.use('/submissions', submission);
 // Basic route
 // app.get('/', (req, res) => {
 //     res.send('Welcome to the API')
