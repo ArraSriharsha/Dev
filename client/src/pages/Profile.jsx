@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { api, logout } from '../services/api';
 import { User, Mail, Phone, CircleUser, LogOutIcon } from 'lucide-react';
-
+import Sidebar from '../components/Sidebar';
 const Profile = () => {
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -76,12 +76,14 @@ const Profile = () => {
 
     return (
         <div>
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="min-h-screen bg-gradient-to-b from-black to-red-200 text-white">
-            <div className="w-full h-full absolute">
+        <Sidebar />
+        
+            {/* <div className="w-full h-full absolute">
                 <img src="/profile.svg" className="w-full h-full object-cover opacity-70" alt="background" />
-            </div>
-            <div className="container mx-auto px-4 py-12">
+            </div> */}
+            {/* <div className="container mx-auto px-4 py-12">
                 <div className="max-w-xl mx-auto">
                     <div className="bg-black/50 border-2 border-red-500/50 rounded-xl p-8 shadow-xl backdrop-blur-sm">
                         <div className="flex items-center gap-4 mb-8">
@@ -131,7 +133,8 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            </div>
+            </div> */}
+        </div>
         </div>
     );
 };
