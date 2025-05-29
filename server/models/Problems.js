@@ -7,7 +7,7 @@ const exampleSchema = new mongoose.Schema({
 });
 
 const problemSchema = new mongoose.Schema({
-  username: { type: String, required: true },
+  username: { type: String, required: false },
   title: { type: String, required: true },
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], required: true },
   description: { type: String, required: true },

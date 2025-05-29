@@ -3,7 +3,12 @@ import jwt from 'jsonwebtoken';
 
 export const getProfile = async (req, res) => {
     try {
-        const { id } = req.user;
+        const token = req.cookies.token;
+        if(!token) {
+            return res.status(401).json({message: "No token found"});
+        }
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const id = decoded.userId;
         const profile = await user.findById(id);
         res.status(200).json({
             username: profile.Username,

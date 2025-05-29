@@ -75,27 +75,31 @@ const UploadProblems = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('title', form.title);
+        formData.append('difficulty', form.difficulty);
+        formData.append('description', form.description);
+        formData.append('constraints', form.constraints);
+        formData.append('examples', form.examples);
+        if (form.inputFile) {
+            formData.append('inputFile', form.inputFile);
+        }
+        if (form.outputFile) {
+            formData.append('outputFile', form.outputFile);
+        }
         try {
             setError('');
             if (selectedProblem) {
-                await updateProblem(selectedProblem._id, form);
+                await updateProblem(selectedProblem._id, formData);
                 toast.success('Problem updated successfully!');
             } else {
-                await uploadProblem(form);
+                await uploadProblem(formData);
                 toast.success('Problem uploaded successfully!');
             }
             await fetchProblems();
             resetForm();
         } catch (error) {
-            if (error.response?.status === 401) {
-                setError('Your session has expired. Please log in again.');
-                toast.error('Your session has expired. Please log in again.');
-                navigate('/');
-            } else {
-                const errorMessage = error.response?.data?.message || 'Failed to save problem';
-                toast.error(errorMessage);
-                setError(errorMessage);
-            }
+            toast.error(error.response?.data?.message || 'Failed to save problem');
         }
     };
 
@@ -120,41 +124,23 @@ const UploadProblems = () => {
 
     const handleEdit = (problem) => {
         setSelectedProblem(problem);
+        // Remove _id fields from examples
+        const examplesWithoutId = problem.examples.map(({ input, output, explanation }) => ({
+            input,
+            output,
+            explanation
+        }));
         setForm({
             title: problem.title,
             difficulty: problem.difficulty,
             description: problem.description,
             constraints: problem.constraints.join(', '),
-            examples: JSON.stringify(problem.examples, null, 2),
+            examples: JSON.stringify(examplesWithoutId, null, 2),
             inputFile: null,
             outputFile: null
         });
     };
 
-    const handleUpdate = async (problemId) => {
-        try {
-            const formData = new FormData();
-            Object.keys(form).forEach(key => {
-                if (form[key] !== null) {
-                    formData.append(key, form[key]);
-                }
-            });
-            await updateProblem(problemId, formData);
-            setSelectedProblem(null);
-            setForm({
-                title: '',
-                difficulty: '',
-                description: '',
-                constraints: '',
-                examples: '',
-                inputFile: null,
-                outputFile: null
-            });
-            fetchProblems();
-        } catch (error) {
-            setError(error.response?.data?.message || 'Failed to update problem');
-        }
-    };
 
     const resetForm = () => {
         setForm({
@@ -175,12 +161,19 @@ const UploadProblems = () => {
                 <div className="container mx-auto px-4 py-8">
                     <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
                         <div className="text-2xl text-white">{error}</div>
-                        {error.includes('Sign in') && (
+                        {error.includes('Sign in') ? (
                             <button
                                 onClick={() => navigate('/')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Signin
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => navigate('/uploadProblem')}
+                                className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
+                            >
+                                Click and Reload
                             </button>
                         )}
                     </div>
@@ -190,7 +183,7 @@ const UploadProblems = () => {
     }
 
     if (isLoading) {
-        return (
+  return (
             <div className="min-h-screen bg-black text-white flex">
                 <div className="w-20 flex-shrink-0">
                   <Sidebar userData={userData || {}} />

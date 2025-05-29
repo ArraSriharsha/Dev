@@ -81,12 +81,19 @@ const Problems = () => {
                 <div className="container mx-auto px-4 py-8">
                     <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
                         <div className="text-2xl text-white">{error}</div>
-                        {error.includes('Sign in') && (
+                        {error.includes('Sign in') ? (
                             <button
                                 onClick={() => navigate('/')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Signin
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => navigate('/home')}
+                                className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
+                            >
+                                Go to Home
                             </button>
                         )}
                     </div>
@@ -96,13 +103,13 @@ const Problems = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-black to-red-400 text-white">
+        <div className="min-h-screen bg-gradient-to-b from-black to-red-400/80 text-white">
             <Navbar />
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-5">
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <h1 className="text-3xl font-semibold text-white">
-                        Problems
+                    <h1 className="text-3xl font-roboto text-white">
+                        Prob<span className="text-red-500">lems</span>
                     </h1>
                     <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
                         <div className="relative"> {/* relative wrt to the parent div of the search icon */}
@@ -146,16 +153,16 @@ const Problems = () => {
                     </div>
                 ) : (
                     <>
-                        <div className="grid ml-4 mr-4 gap-4">
+                        <div className="grid ml-5 mr-5 gap-4">
                             {problems.map((problem) => (
                                 <div
                                     key={problem._id}
                                     onClick={() => navigate(`/problems/${problem._id}`)}
-                                    className="bg-white border border-gray-800 p-4 rounded-lg hover:border-red-500 hover:scale-105 transition-all cursor-pointer group"
+                                    className="bg-white p-4 rounded-lg  hover:border-red-500 hover:scale-105 transition-all cursor-pointer group"
                                 >
                                     <div className="flex justify-between items-center">
                                         <div className="flex-1">
-                                            <h2 className="text-xl text-black group-hover:text-red-500 transition-colors">
+                                            <h2 className="text-lg text-black group-hover:text-red-500 transition-colors">
                                                 {problem.title}
                                             </h2>
                                             <p className="text-gray-500 mt-1 line-clamp-1">

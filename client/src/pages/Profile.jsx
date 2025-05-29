@@ -28,18 +28,17 @@ const Profile = () => {
     const [formErrors, setFormErrors] = useState({});
     const [submissions, setSubmissions] = useState([]);
     const navigate = useNavigate();
-    const [isAdmin, setIsAdmin] = useState(false);
+    
     useEffect(() => {
         const fetchUserData = async () => {
             setIsLoading(true);
             try {
                 const response = await getProfile();
+                const role = response.data.role;
                 const submissions = await getSubmissions();
                 setSubmissions(submissions.data);
                 setUserData(response.data);
-                if(response.data.role === 'Admin'){
-                    setIsAdmin(true);
-                }
+                
                 // Calculate statistics
                 const uniqueProblems = new Set(submissions.data.map(sub => sub.problemTitle));
                 const passedSubmissions = submissions.data.filter(sub => sub.status === 'AC').length;
@@ -148,12 +147,19 @@ const Profile = () => {
                 <div className="container mx-auto px-4 py-8">
                     <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
                         <div className="text-2xl text-white">{error}</div>
-                        {error.includes('Sign in') && (
+                        {error.includes('Sign in') ? (
                             <button
                                 onClick={() => navigate('/')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Signin
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => navigate('/home')}
+                                className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
+                            >
+                                Go to Home
                             </button>
                         )}
                     </div>
@@ -194,11 +200,14 @@ const Profile = () => {
                                 <Typography variant="h5" className="font-bold text-gray-900 leading-tight">
                                     {userData?.username || userData?.name || 'User'}
                                 </Typography>
-                                {(userData?.createdAt || userData?.joinDate) && (
+                                <div className="flex items-center gap-2">
                                     <Typography className="text-xs text-gray-500 mt-0.5">
                                         Joined {new Date(userData.createdAt || userData.joinDate).toLocaleDateString()}
                                     </Typography>
-                                )}
+                                    <span className="text-xs px-2 py-0.5 bg-red-500/10 text-red-500 rounded-full">
+                                        {userData?.role || 'User'}
+                                    </span>
+                                </div>
                             </div>
                         </div>
 

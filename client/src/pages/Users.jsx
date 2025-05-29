@@ -219,20 +219,28 @@ const Users = () => {
     }
 
     if (error) {
-        return (
+  return (
             <div className="min-h-screen bg-black text-white">
                 <Navbar />
                 <div className="container mx-auto px-4 py-8">
                     <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
                         <div className="text-2xl text-white">{error}</div>
-                        {error.includes('Sign in') && (
+                        {error.includes('Sign in') ? (
                             <button
                                 onClick={() => navigate('/')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Signin
                             </button>
-                        )}
+                            ) : (
+                            <button
+                                onClick={() => navigate('/home')}
+                                className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
+                            >
+                                Go to Home
+                            </button>
+                            )
+                        }
                     </div>
                 </div>
             </div>

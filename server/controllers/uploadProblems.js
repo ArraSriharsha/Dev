@@ -30,8 +30,8 @@ export const uploadProblem = async (req, res) => {
     try {
         const{ id } = req.user;
         const { title, difficulty, description, constraints, examples } = req.body;
-        const inputFile = req.files?.inputFile?.[0];
-        const outputFile = req.files?.outputFile?.[0];
+        const inputFile = req.files?.inputFile[0];
+        const outputFile = req.files?.outputFile[0];
         
         const userDoc = await user.findById(id).select('Username');
         const username = userDoc?.Username;
@@ -132,9 +132,12 @@ export const uploadProblem = async (req, res) => {
 export const updateProblem = async (req, res) => {
     try {
         const { id } = req.params;
+        const { id: userId } = req.user;
         const { title, difficulty, description, constraints, examples } = req.body;
         const inputFile = req.files?.inputFile?.[0];
         const outputFile = req.files?.outputFile?.[0];
+        const userDoc = await user.findById(userId).select('Username');
+        const username = userDoc?.Username;
 
         // Find the problem
         const newproblem = await problem.findById(id);
@@ -144,7 +147,7 @@ export const updateProblem = async (req, res) => {
                 message: 'Problem not found'
             });
         }
-
+        
         // Validate all fields if provided
         if (title && !title.trim()) {
             return res.status(400).json({
@@ -209,6 +212,7 @@ export const updateProblem = async (req, res) => {
         }
 
         // Update other fields if provided
+        if (username) newproblem.username = username;
         if (title) newproblem.title = title.trim();
         if (difficulty) newproblem.difficulty = difficulty.trim();
         if (description) newproblem.description = description.trim();

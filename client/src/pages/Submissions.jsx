@@ -65,8 +65,13 @@ const Submissions = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                <Typography className="text-red-500 font-bold">{error}</Typography>
+            <div className="h-screen bg-gradient-to-br from-black via-red-100 to-red-200 flex items-center justify-center relative">
+                <div className="w-20 flex-shrink-0">
+                    <Sidebar userData={userData || {}}/>
+                </div>
+                <div className="flex-1 flex items-center justify-center gap-2">
+                    <Typography className="text-red-500 font-bold">{error}</Typography>
+                </div>
             </div>
         );
     }

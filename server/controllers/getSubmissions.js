@@ -1,8 +1,13 @@
 import submission from '../models/Submissions.js';
-
+import jwt from 'jsonwebtoken';
 export const getSubmissions = async (req, res) => {
     try {
-        const { id } = req.user;
+        const token = req.cookies.token;
+        if(!token) {
+            return res.status(401).json({message: "No token found"});
+        }
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const id = decoded.userId;
         const submissions = await submission.find({ userId: id });
         res.status(200).json(submissions);
     } catch (error) {

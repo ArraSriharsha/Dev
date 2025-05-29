@@ -1,17 +1,23 @@
 import user from '../models/User.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export const getUsers = async (req, res) => {
     try {
-        const { id } = req.user;
+        const token = req.cookies.token;
+        if(!token) {
+            return res.status(401).json({message: "No token found"});
+        }
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const id = decoded.userId;
         const currentUser = await user.findById(id).select('Role');
         
-        if (currentUser.Role !== 'Admin') {
-            return res.status(403).json({
-                success: false,
-                message: 'You do not have permission to access this resource'
-            });
-        }
+        // if (currentUser.Role !== 'Admin') {
+        //     return res.status(403).json({
+        //         success: false,
+        //         message: 'You do not have permission to access this resource'
+        //     });
+        // }
 
         const users = await user.find().select('-Password');
         res.status(200).json({

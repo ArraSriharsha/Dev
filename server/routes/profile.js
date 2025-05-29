@@ -4,7 +4,7 @@ import { protect } from '../middleware/middleauth.js';
 
 const router = express.Router();
 
-router.get('/', protect, getProfile);
+router.get('/', getProfile);
 router.put('/update', protect, updateProfile);
 router.delete('/delete', protect, deleteProfile);
 

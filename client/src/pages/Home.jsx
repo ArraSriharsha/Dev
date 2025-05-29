@@ -47,21 +47,27 @@ const Home = () => {
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12">Why Choose Code Arena?</h2>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <FeatureCard
+                        <div className=" hover:scale-105 bg-white/60 backdrop-blur-lg border border-red-400 rounded-lg hover:shadow-md hover:border-red-500 transition-all duration-300">  
+                        <FeatureCard 
                             icon={<Code className="w-12 h-12 text-red-500" />}
                             title="Diverse Problem Set"
                             description="Practice with 1000+ problems across various difficulty levels and categories."
                         />
+                         </div>
+                         <div className=" hover:scale-105 bg-white/60 backdrop-blur-lg border border-red-400 rounded-lg hover:shadow-md hover:border-red-500 transition-all duration-300">
                         <FeatureCard
                             icon={<Trophy className="w-12 h-12 text-red-500" />}
                             title="Regular Contests"
                             description="Participate in weekly and biweekly contests to test your skills against others."
                         />
+                        </div>
+                        <div className=" hover:scale-105 bg-white/60 backdrop-blur-lg border border-red-400 rounded-lg hover:shadow-md hover:border-red-500 transition-all duration-300">
                         <FeatureCard
                             icon={<Users className="w-12 h-12 text-red-500" />}
                             title="Online Compiler"
                             description="Test your code with the online compiler to verify your test cases."
                         />
+                        </div>
                     </div>
                 </div>
             </section>

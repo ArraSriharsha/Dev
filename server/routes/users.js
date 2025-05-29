@@ -5,18 +5,18 @@ import { protect } from '../middleware/middleauth.js';
 const router = express.Router();
 
 // All routes are protected and require authentication
-router.use(protect);
+
 
 // Get all users
 router.get('/', getUsers);
 
 // Create a new user
-router.post('/', createUser);
+router.post('/', protect, createUser);
 
 // Update a user
-router.put('/:userId', updateUser);
+router.put('/:userId', protect, updateUser);
 
 // Delete a user
-router.delete('/:userId', deleteUser);
+router.delete('/:userId', protect, deleteUser);
 
 export default router; 

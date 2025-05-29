@@ -12,7 +12,7 @@ import ProblemDetails from './pages/ProblemDetails.jsx'
 import Submissions from './pages/Submissions.jsx'
 import UploadProblems from './pages/UploadProblems.jsx'
 import Users from './pages/Users.jsx'
-
+import Leaderboard from './pages/Leaderboard.jsx'
 function App() {
   return (
     <Router>
@@ -29,6 +29,7 @@ function App() {
           <Route path='/submissions' element={<Submissions />} />
           <Route path='/uploadProblem' element={<UploadProblems />} />
           <Route path='/users' element={<Users />} />
+          <Route path='/leaderboard' element={<Leaderboard />} />
         </Routes>
         <ToastContainer
           position="top-right"
