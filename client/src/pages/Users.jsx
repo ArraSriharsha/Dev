@@ -27,7 +27,7 @@ const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const usersPerPage = 5;
-
+    const [showPassword, setShowPassword] = useState(false);
     useEffect(() => {
         fetchUsers();
     }, []);
@@ -315,8 +315,8 @@ const Users = () => {
                 </div>
 
                 {/* User Form */}
-                <div className="w-1/2 pxl-2 p-6 mt-14 overflow-y-auto">
-                    <Card className="bg-white/60 backdrop-blur-lg border border-red-400 overflow-y-auto shadow-2xl rounded-3xl p-6 h-[calc(100vh-12rem)]">
+                <div className="w-1/2 pxl-2 p-6 mt-11 overflow-y-auto">
+                    <Card className="bg-white/60 backdrop-blur-lg border border-red-400 overflow-y-auto shadow-2xl rounded-3xl p-6 h-[calc(100vh-10rem)]">
                         <Typography variant="h4" className="text-gray-900 mb-6">
                             {selectedUser ? 'Edit User' : 'Add New User'}
                         </Typography>
@@ -324,7 +324,7 @@ const Users = () => {
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-base font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
                                         First Name
                                     </label>
                                     <input
@@ -333,14 +333,12 @@ const Users = () => {
                                         value={formData.FirstName}
                                         onChange={handleInputChange}
                                         required
-                                        className={`w-full px-3 py-2 bg-white/80 border ${formErrors.FirstName ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                        className={`w-full px-3 py-2 text-sm bg-white/80 border ${formErrors.FirstName ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     />
-                                    {formErrors.FirstName && (
-                                        <p className="mt-1 text-sm text-red-500">{formErrors.FirstName}</p>
-                                    )}
+                                    
                                 </div>
                                 <div>
-                                    <label className="block text-base font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Last Name
                                     </label>
                                     <input
@@ -349,15 +347,13 @@ const Users = () => {
                                         value={formData.LastName}
                                         onChange={handleInputChange}
                                         required
-                                        className={`w-full px-3 py-2 bg-white/80 border ${formErrors.LastName ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                        className={`w-full px-3 py-2 text-sm bg-white/80 border ${formErrors.LastName ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     />
-                                    {formErrors.LastName && (
-                                        <p className="mt-1 text-sm text-red-500">{formErrors.LastName}</p>
-                                    )}
+                                    
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-base font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Email
                                 </label>
                                 <input
@@ -366,14 +362,12 @@ const Users = () => {
                                     value={formData.Email}
                                     onChange={handleInputChange}
                                     required
-                                    className={`w-full px-3 py-2 bg-white/80 border ${formErrors.Email ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-3 py-2 text-sm bg-white/80 border ${formErrors.Email ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
-                                {formErrors.Email && (
-                                    <p className="mt-1 text-sm text-red-500">{formErrors.Email}</p>
-                                )}
+                               
                             </div>
                             <div>
-                                <label className="block text-base font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Username
                                 </label>
                                 <input
@@ -382,30 +376,37 @@ const Users = () => {
                                     value={formData.Username}
                                     onChange={handleInputChange}
                                     required
-                                    className={`w-full px-3 py-2 bg-white/80 border ${formErrors.Username ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-3 py-2 text-sm bg-white/80 border ${formErrors.Username ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500` }
                                 />
-                                {formErrors.Username && (
-                                    <p className="mt-1 text-sm text-red-500">{formErrors.Username}</p>
-                                )}
+                                
                             </div>
                             <div>
-                                <label className="block text-base font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Password {selectedUser && '(leave blank to keep current)'}
                                 </label>
+                                <div className="relative flex items-center">
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     name="Password"
                                     value={formData.Password}
                                     onChange={handleInputChange}
                                     required={!selectedUser}
-                                    className={`w-full px-3 py-2 bg-white/80 border ${formErrors.Password ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                />
-                                {formErrors.Password && (
-                                    <p className="mt-1 text-sm text-red-500">{formErrors.Password}</p>
-                                )}
+                                    className={`w-full px-3 py-2 bg-white/80 text-sm border ${formErrors.Password ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}/>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setShowPassword(!showPassword)} 
+                                        className="absolute inset-y-0 right-0 flex items-center pr-3 hover:text-red-500 transition-colors duration-200"
+                                    >
+                                        <img 
+                                            src={showPassword ? "/eye-closed.svg" : "/eye-open.svg"} 
+                                            alt={showPassword ? "Hide password" : "Show password"} 
+                                            className="w-5 h-5 invert opacity-80 hover:opacity-100" 
+                                        />
+                                    </button>
+                                </div>
                             </div>
                             <div>
-                                <label className="block text-base font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Phone Number
                                 </label>
                                 <input
@@ -413,21 +414,19 @@ const Users = () => {
                                     name="PhoneNumber"
                                     value={formData.PhoneNumber}
                                     onChange={handleInputChange}
-                                    className={`w-full px-3 py-2 bg-white/80 border ${formErrors.PhoneNumber ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-3 py-2 text-sm bg-white/80 border ${formErrors.PhoneNumber ? 'border-red-500' : 'border-white/20'} rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
-                                {formErrors.PhoneNumber && (
-                                    <p className="mt-1 text-sm text-red-500">{formErrors.PhoneNumber}</p>
-                                )}
+                                
                             </div>
                             <div>
-                                <label className="block text-base font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Role
                                 </label>
                                 <select
                                     name="Role"
                                     value={formData.Role}
                                     onChange={handleInputChange}
-                                    className="w-full px-3 py-2 bg-white/80 border border-white/20 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 text-sm bg-white/80 border border-white/20 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="User">User</option>
                                     <option value="Moderator">Moderator</option>

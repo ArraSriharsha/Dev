@@ -146,12 +146,12 @@ const Problems = () => {
                     </div>
                 ) : (
                     <>
-                        <div className="grid gap-4">
+                        <div className="grid ml-4 mr-4 gap-4">
                             {problems.map((problem) => (
                                 <div
                                     key={problem._id}
                                     onClick={() => navigate(`/problems/${problem._id}`)}
-                                    className="bg-white border border-gray-800 p-4 rounded-lg hover:border-red-500 transition-all cursor-pointer group"
+                                    className="bg-white border border-gray-800 p-4 rounded-lg hover:border-red-500 hover:scale-105 transition-all cursor-pointer group"
                                 >
                                     <div className="flex justify-between items-center">
                                         <div className="flex-1">

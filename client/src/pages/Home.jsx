@@ -76,7 +76,7 @@ const Home = () => {
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-4 px-6">
-                    {featuredProblems.map(problem  => (
+                    {featuredProblems.map((problem)  => (
                         <Link 
                             key={problem._id}
                             to={`/problems/${problem._id}`}

@@ -3,6 +3,7 @@ import { Tooltip } from "@material-tailwind/react";
 import {House,Code,CircleUser,LogOut,Send,Upload,Users} from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {logout} from "../services/api.js"
+import { toast } from "react-toastify";
 const navItems = [
   { to: "/home", icon: House, label: "Home" },
   { to: "/problems", icon: Code, label: "Problems" },
@@ -17,8 +18,10 @@ const Sidebar = ({userData}) => {
  const handleLogout = async () => {
   try {
     await logout();
+    toast.success("Logged out successfully");
     navigate("/");
   } catch (error) {
+    toast.error("Logout failed");
     console.error("Logout failed:", error);
   }
 }
