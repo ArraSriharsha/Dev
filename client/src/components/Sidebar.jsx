@@ -1,19 +1,19 @@
 import React from "react";
 import { Tooltip } from "@material-tailwind/react";
-import {House,Code,CircleUser,SquarePen,LogOut,Send} from 'lucide-react';
+import {House,Code,CircleUser,LogOut,Send,Upload,Users} from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {logout} from "../services/api.js"
 const navItems = [
   { to: "/home", icon: House, label: "Home" },
   { to: "/problems", icon: Code, label: "Problems" },
   { to: "/profile", icon: CircleUser, label: "Profile" },
-  { to: "/submissions", icon: Send, label: "Submissons" },
+  { to: "/submissions", icon: Send, label: "Submissons" }
 ];
 
-const Sidebar = () => {
+const Sidebar = ({userData}) => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const role = userData.role;
  const handleLogout = async () => {
   try {
     await logout();
@@ -31,7 +31,7 @@ const Sidebar = () => {
         <span className="text-red-500 text-lg font-bold"><img src="/logo.svg" alt="CodeArena" className="w-7 h-7 text-red-500" /></span>
       </div>
       {/* Nav Icons */}
-      <div className="flex flex-col gap-8 flex-1 w-full items-center">
+      <div className="flex flex-col gap-5 w-full items-center">
         {navItems.map(({ to, icon: Icon, label }) => {
           const isActive = location.pathname === to;
           return (
@@ -42,6 +42,23 @@ const Sidebar = () => {
             </Tooltip>
           );
         })}
+        
+        {/* Admin/Moderator Icons */}
+        {(role === 'Admin' || role === 'Moderator') && (
+          <Tooltip key="Upload Problem" content="Upload Problem" placement="right" className="bg-black text-white text-xs px-2 py-1 rounded">
+            <Link to="/uploadProblem" className={`flex items-center justify-center w-12 h-12 rounded-xl transition-colors text-gray-400 hover:bg-white hover:text-red-500`}>
+              <Upload className="h-7 w-7" />
+            </Link>
+          </Tooltip>
+        )}
+        
+        {role === 'Admin' && (
+          <Tooltip key="Users" content="Users" placement="right" className="bg-black text-white text-xs px-2 py-1 rounded">
+            <Link to="/users" className={`flex items-center justify-center w-12 h-12 rounded-xl transition-colors text-gray-400 hover:bg-white hover:text-red-500`}>
+              <Users className="h-7 w-7" />
+            </Link>
+          </Tooltip>
+        )}
       </div>
       {/* Logout Icon */}
       <div className="mt-auto">

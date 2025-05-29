@@ -52,7 +52,7 @@ export const signup = async (req, res) => {
         });
 
         res.status(200).json({
-            message: "You have successfully Signed Up",
+            message: "Account has been Created Successfully",
             user: {
                 id: newUser._id,
                 username: newUser.Username,

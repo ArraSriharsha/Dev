@@ -1,37 +1,25 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { getProblems } from '../services/api'
 import Layout from '../components/Layout'
 import { ArrowRight, Trophy, Users, Code } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Home = () => {
     const navigate = useNavigate();
+    const [featuredProblems, setFeaturedProblems] = useState([]);
     // Static featured problems
-    const featuredProblems = [
-        {
-            _id: "1",
-            title: "Two Sum",
-            description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-            difficulty: "Easy"
-        },
-        {
-            _id: "2",
-            title: "Add Two Numbers",
-            description: "You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit.",
-            difficulty: "Medium"
-        },
-        {
-            _id: "3",
-            title: "Longest Substring Without Repeating Characters",
-            description: "Given a string s, find the length of the longest substring without repeating characters.",
-            difficulty: "Medium"
-        },
-        {
-            _id: "4",
-            title: "Median of Two Sorted Arrays",
-            description: "Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.",
-            difficulty: "Hard"
-        }
-    ];
+    useEffect(() => {
+        const fetchFeaturedProblems = async () => {
+            const response = await getProblems({
+                limit: 4,
+                sort: {
+                    createdAt: -1
+                }
+            });
+            setFeaturedProblems(response.data.problems);
+        };
+        fetchFeaturedProblems();
+    }, []);
 
     return (
         <Layout>

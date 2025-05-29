@@ -29,6 +29,7 @@ const Problems = () => {
             setIsLoading(true);
             const response = await getProblems({
                 page: currentPage,
+                limit : 5,
                 search: debouncedSearch,
                 difficulty: selectedDifficulty
             });

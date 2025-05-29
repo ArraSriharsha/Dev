@@ -26,6 +26,14 @@ export const uploadProblem = async (data) => {
   const response = await api.post('/upload', data);
   return response;
 };
+export const updateProblem = async (id, data) => {
+  const response = await api.put(`/problems/${id}`, data);
+  return response;
+};
+export const deleteProblem = async (id) => {
+  const response = await api.delete(`/problems/${id}`);
+  return response;
+};
 
 export const getProblemById = async (id) => {
   const response = await api.get(`/problems/${id}`);
@@ -57,12 +65,32 @@ export const updateProfile = async (data) => {
   return response;
 };
 
-export const deleteProfile = async () => {
+export const deleteAccount = async () => {
   const response = await api.delete('/profile/delete');
   return response;
 };
 
 export const getSubmissions = async () => {
   const response = await api.get('/submissions');
+  return response;
+};
+
+export const getUsers = async () => {
+  const response = await api.get('/users');
+  return response;
+};
+
+export const createUser = async (userData) => {
+  const response = await api.post('/users', userData);
+  return response;
+};
+
+export const updateUser = async (userId, userData) => {
+  const response = await api.put(`/users/${userId}`, userData);
+  return response;
+};
+
+export const deleteUser = async (userId) => {
+  const response = await api.delete(`/users/${userId}`);
   return response;
 };

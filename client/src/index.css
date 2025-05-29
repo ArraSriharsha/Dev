@@ -48,3 +48,36 @@
       @apply font-['Roboto_Mono'];
     }
   }
+
+/* Toast Container Styles */
+.Toastify__toast-container {
+  z-index: 9999;
+}
+
+.Toastify__toast {
+  min-height: 64px;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.Toastify__toast--success {
+  background: #10B981;
+  color: white;
+}
+
+.Toastify__toast--error {
+  background: #EF4444;
+  color: white;
+}
+
+.Toastify__toast-body {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.3);
+}

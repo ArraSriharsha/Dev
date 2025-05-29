@@ -2,6 +2,7 @@ import problem from '../models/Problems.js';
 import { validateTestCases } from '../utils/testCaseHandler.js';
 import path from 'path';
 import fs from 'fs/promises';
+import user from '../models/User.js';
 
 const validateRequiredFields = (fields) => {
     const errors = [];
@@ -27,10 +28,13 @@ const validateRequiredFields = (fields) => {
 
 export const uploadProblem = async (req, res) => {
     try {
+        const{ id } = req.user;
         const { title, difficulty, description, constraints, examples } = req.body;
         const inputFile = req.files?.inputFile?.[0];
         const outputFile = req.files?.outputFile?.[0];
-
+        
+        const userDoc = await user.findById(id).select('Username');
+        const username = userDoc?.Username;
         // Validate all required fields
         const fieldErrors = validateRequiredFields(req.body);
         if (fieldErrors.length > 0) {
@@ -69,15 +73,17 @@ export const uploadProblem = async (req, res) => {
                 message: error.message || 'Error validating test cases'
             });
         }
-
+        
         // Create new problem first to get its ID
         const newproblem = new problem({
+            username: username,
             title: title.trim(),
             difficulty: difficulty.trim(),
             description: description.trim(),
             constraints: constraints.split(',').map(c => c.trim()),
             examples: JSON.parse(examples),
             testCaseCount: testCaseCount
+
         });
 
         // Save to get the ID
@@ -125,13 +131,13 @@ export const uploadProblem = async (req, res) => {
 
 export const updateProblem = async (req, res) => {
     try {
-        const { problemId } = req.params;
+        const { id } = req.params;
         const { title, difficulty, description, constraints, examples } = req.body;
         const inputFile = req.files?.inputFile?.[0];
         const outputFile = req.files?.outputFile?.[0];
 
         // Find the problem
-        const newproblem = await problem.findById(problemId);
+        const newproblem = await problem.findById(id);
         if (!newproblem) {
             return res.status(404).json({
                 success: false,
@@ -199,7 +205,7 @@ export const updateProblem = async (req, res) => {
 
             newproblem.testCasesInputPath = inputFilePath;
             newproblem.testCasesOutputPath = outputFilePath;
-            
+            newproblem.testCaseCount = testCaseCount;
         }
 
         // Update other fields if provided
@@ -265,9 +271,9 @@ export const updateProblem = async (req, res) => {
 
 export const deleteProblem = async (req, res) => {
     try {
-        const { problemId } = req.params;
+        const { id } = req.params;
 
-        const newproblem = await problem.findById(problemId);
+        const newproblem = await problem.findById(id);
         if (!newproblem) {
             return res.status(404).json({
                 success: false,
@@ -278,7 +284,7 @@ export const deleteProblem = async (req, res) => {
         // Delete problem directory and all its contents
         const currentDir = process.cwd();
         const dirpath = path.dirname(currentDir);
-        const problemDir = path.join(dirpath, 'testcases', problemId);
+        const problemDir = path.join(dirpath, 'testcases', newproblem.title);
         try {
             await fs.rm(problemDir, { recursive: true, force: true });
         } catch (error) {
@@ -286,7 +292,7 @@ export const deleteProblem = async (req, res) => {
         }
 
         // Delete the problem
-        await newproblem.findByIdAndDelete(problemId);
+        await problem.findByIdAndDelete(id);
 
         res.status(200).json({
             success: true,

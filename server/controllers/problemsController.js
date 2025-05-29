@@ -1,9 +1,12 @@
 import Problem from '../models/Problems.js';
-
+import user from '../models/User.js';
 export const getProblems = async (req, res) => {
     try {
+        const { id } = req.user;  
+        const role = await user.findById(id).select('role');
+        const username = req.query.username;
         const page = parseInt(req.query.page) || 1; // converts string to number; if not provided, defaults to 1
-        const limit = parseInt(req.query.limit) || 5; // converts string to number; if not provided, defaults to 5
+        const limit = parseInt(req.query.limit) || 0; // converts string to number; if not provided, defaults to 5
         const difficulty = req.query.difficulty;  // usuallt get request has query params unless modified by a middleware cannot destructure without req.query
         const search = req.query.search;
         const sortBy = req.query.sortBy || 'title';
@@ -20,7 +23,9 @@ export const getProblems = async (req, res) => {
                 { description: { $regex: search, $options: 'i' } }
             ];
         }
-
+        if (username) {
+            query.username = username;
+        }
         // Execute query with pagination
         const problems = await Problem.find(query)
             .sort({ [sortBy]: sortOrder })
@@ -34,7 +39,8 @@ export const getProblems = async (req, res) => {
             problems,
             currentPage: page,
             totalPages: Math.ceil(total / limit),
-            totalProblems: total
+            totalProblems: total,
+            role: role
         });
     } catch (error) {
         console.error('Error fetching problems:', error);

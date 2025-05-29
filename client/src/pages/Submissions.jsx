@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Typography, Card, Spinner, Button } from "@material-tailwind/react";
 import { FileText, Code2, Clock, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getSubmissions } from '../services/api';
+import { getSubmissions, getProfile } from '../services/api';
 
 const Submissions = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -11,12 +11,14 @@ const Submissions = () => {
     const [selectedSubmission, setSelectedSubmission] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const submissionsPerPage = 5;
-
+    const [userData, setUserData] = useState(null);
     useEffect(() => {
         const fetchSubmissions = async () => {
             setIsLoading(true);
             try {
                 const response = await getSubmissions();
+                const data = await getProfile();
+                setUserData(data.data);
                 setSubmissions(response.data);
                 setError(null);
             } catch (error) {
@@ -73,7 +75,7 @@ const Submissions = () => {
         return (
             <div className="min-h-screen bg-black text-white flex">
                 <div className="w-20 flex-shrink-0">
-                    <Sidebar />
+                    <Sidebar userData={userData || {}}/>
                 </div>
                 <div className="flex-1 flex items-center justify-center gap-2">
                     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 gap-2"></div>
@@ -87,7 +89,7 @@ const Submissions = () => {
         <div className="h-screen bg-gradient-to-br from-black via-red-100 to-red-200 flex items-center justify-center relative">
             {/* Sidebar */}
             <div className="w-20 flex-shrink-0">
-                <Sidebar />
+                <Sidebar userData={userData || {}}/>
             </div>
             {/* Main Content */}
             <div className="flex-1 flex items-center justify-center overflow-auto">
@@ -102,7 +104,7 @@ const Submissions = () => {
 
                         {submissions.length === 0 ? (
                             <div className="text-center py-8">
-                                <Typography className="text-gray-600">
+                                <Typography className=" text-xl text-gray-600">
                                     No submissions yet
                                 </Typography>
                             </div>

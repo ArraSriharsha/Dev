@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { signin } from '../services/api'
-import { useNavigate } from 'react-router-dom' 
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 export const Signin = () => {
     const navigate = useNavigate()
@@ -17,8 +18,8 @@ export const Signin = () => {
     const validateField = (name, value) => {
         let error = '';
         switch (name) {
-            case 'username':
-                if (!value) error = 'Username is required';
+            case 'login':
+                if (!value) error = 'Username/Email is required';
                 break;
             case 'password':
                 if (!value) error = 'Password is required';
@@ -47,23 +48,46 @@ export const Signin = () => {
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             setSubmitError('Please fill all required fields correctly');
+            toast.error('Please fill all required fields correctly', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark"
+            });
             setIsLoading(false);
             return;
         }
 
         try {
-            const res = await signin(formData);
-            if (res.status === 200) {
-                navigate('/home');
-            } else {
-                setSubmitError(res.data.message || 'Signin failed. Please try again.');
-            }
+            await signin(formData);
+            toast.success('Successfully logged in!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark"
+            });
+            navigate('/home');
         } catch (error) {
-            setSubmitError(error.response?.data?.message || 'Could not Signin. Please try again.');
+            const errorMessage = error.response?.data?.message || 'Failed to sign in';
+            toast.error(errorMessage, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark"
+            });
+            setSubmitError(errorMessage);
         } finally {
             setIsLoading(false);
         }
-        
     };
     
     return (
@@ -81,11 +105,7 @@ export const Signin = () => {
                                 Code <span className="text-red-500">Arena</span>
                             </h2>
                         </a>
-                        {submitError && (
-                            <div className="p-2 text-sm text-white bg-red-100/10 rounded-lg border border-red-500/50 mb-4">
-                                {submitError}
-                            </div>
-                        )}
+
                         <form className="space-y-4" onSubmit={handleSubmit}>
                             <div className="mb-8">
                                 <p className="text-gray-300 text-2xl text-center leading-relaxed">Sign in to your Account</p>

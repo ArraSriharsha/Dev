@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Typography, Card } from "@material-tailwind/react";
 import { UserIcon } from '@heroicons/react/24/solid';
-import {updateProfile,getProfile,getSubmissions } from '../services/api';
+import { updateProfile, getProfile, getSubmissions, deleteAccount } from '../services/api';
 import { CheckCircle2, FileText } from 'lucide-react';
 import Navbar from '../components/Navbar';
-
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const Profile = () => {
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +15,8 @@ const Profile = () => {
     const [stats, setStats] = useState({
         problemsSolved: 0,
         totalSubmissions: 0,
-        accuracy: 0
+        accuracy: 0,
+        score: 0
     });
     const [form, setForm] = useState({
         PhoneNumber: '',
@@ -25,7 +27,8 @@ const Profile = () => {
     });
     const [formErrors, setFormErrors] = useState({});
     const [submissions, setSubmissions] = useState([]);
-
+    const navigate = useNavigate();
+    const [isAdmin, setIsAdmin] = useState(false);
     useEffect(() => {
         const fetchUserData = async () => {
             setIsLoading(true);
@@ -33,21 +36,27 @@ const Profile = () => {
                 const response = await getProfile();
                 const submissions = await getSubmissions();
                 setSubmissions(submissions.data);
-                
+                setUserData(response.data);
+                if(response.data.role === 'Admin'){
+                    setIsAdmin(true);
+                }
                 // Calculate statistics
                 const uniqueProblems = new Set(submissions.data.map(sub => sub.problemTitle));
                 const passedSubmissions = submissions.data.filter(sub => sub.status === 'AC').length;
-                const accuracy = submissions.data.length > 0 
-                    ? (passedSubmissions / submissions.data.length) * 100 
+                const accuracy = submissions.data.length > 0
+                    ? (passedSubmissions / submissions.data.length) * 100
                     : 0;
+
+                
+                const totalScore = submissions.data.reduce((acc, sub) => acc + sub.score, 0);
 
                 setStats({
                     problemsSolved: uniqueProblems.size,
                     totalSubmissions: submissions.data.length,
-                    accuracy: Math.round(accuracy)
+                    accuracy: Math.round(accuracy),
+                    score: totalScore
                 });
 
-                setUserData(response.data);
                 setError(null);
                 setForm({
                     PhoneNumber: response.data.phoneno || '',
@@ -60,14 +69,15 @@ const Profile = () => {
                 if (error.response?.status === 401) {
                     setError('Please Sign in to view your Profile');
                 } else {
-                    setError(error.response?.data?.message || 'Failed to fetch profile data');
+                    const errorMessage = error.response?.data?.message || 'Failed to fetch profile data';
+                    toast.error(errorMessage);
                 }
             } finally {
                 setIsLoading(false);
             }
         };
         fetchUserData();
-    },[updated]);
+    }, [updated]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -78,7 +88,7 @@ const Profile = () => {
         const errors = {};
         if (!form.PhoneNumber.trim()) errors.PhoneNumber = 'Phone number is required.';
         if (!form.Email.trim()) errors.Email = 'Email is required.';
-        else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.Email)) errors.Email = 'Invalid email address.';
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.Email)) errors.Email = 'Invalid email address.';
         if (!form.FirstName.trim()) errors.FirstName = 'First name is required.';
         if (!form.LastName.trim()) errors.LastName = 'Last name is required.';
         if (!form.Username.trim()) errors.Username = 'Username is required.';
@@ -86,17 +96,47 @@ const Profile = () => {
     };
 
     const handleUpdateProfile = async (e) => {
-        setIsLoading(true);
         e.preventDefault();
         const errors = validate();
         setFormErrors(errors);
         if (Object.keys(errors).length === 0) {
             try {
+                setIsLoading(true);
                 const response = await updateProfile(form);
                 setUpdated(prev => !prev);
                 setError(null);
+                toast.success('Profile updated successfully!');
             } catch (error) {
-                setError(error.response?.data?.message || 'Failed to update profile');
+                if (error.response?.status === 401) {
+                    setError('Your session has expired. Please log in again.');
+                    navigate('/');
+                } else {
+                    const errorMessage = error.response?.data?.message || 'Failed to update profile';
+                    toast.error(errorMessage);
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        } else {
+            // Show validation errors in toast
+            Object.values(errors).forEach(error => {
+                toast.error(error);
+            });
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        try {
+            await deleteAccount();
+            toast.success('Account deleted successfully!');
+            navigate('/');
+        } catch (error) {
+            if (error.response?.status === 401) {
+                setError('Your session has expired. Please log in again.');
+                navigate('/');
+            } else {
+                const errorMessage = error.response?.data?.message || 'Failed to delete account';
+                toast.error(errorMessage);
             }
         }
     };
@@ -104,7 +144,7 @@ const Profile = () => {
     if (error) {
         return (
             <div className="min-h-screen bg-black text-white">
-                <Navbar/>
+                <Navbar />
                 <div className="container mx-auto px-4 py-8">
                     <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
                         <div className="text-2xl text-white">{error}</div>
@@ -126,7 +166,7 @@ const Profile = () => {
         return (
             <div className="min-h-screen bg-black text-white flex">
                 <div className="w-20 flex-shrink-0">
-                    <Sidebar />
+                    <Sidebar userData={userData || {}} />
                 </div>
                 <div className="flex-1 flex items-center justify-center gap-2 ">
                     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 gap-2"></div>
@@ -135,7 +175,7 @@ const Profile = () => {
             </div>
         );
     }
-    
+
 
     return (
         <div className="h-screen bg-gradient-to-br from-black via-red-100 to-red-200 flex items-center justify-center">
@@ -199,31 +239,49 @@ const Profile = () => {
                                         </Typography>
                                     </div>
                                 </div>
+                                {/* Score Display */}
+                                <div className="ml-6 flex flex-col justify-center">
+                                    <div className="bg-white/80 rounded-xl p-4 shadow-lg">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center">
+                                                <span className="text-2xl font-bold text-red-500">🏆</span>
+                                            </div>
+                                            <div>
+                                                <Typography variant="h4" className="font-bold text-gray-900">
+                                                    {stats.score}
+                                                </Typography>
+                                                <Typography variant="small" className="text-gray-600">
+                                                    Rating
+                                                </Typography>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Stats Grid */}
                             <div className="p-6">
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-white/80 rounded-xl p-2 text-center">
-                                    <div className="flex items-center justify-center gap-2 mb-1">
-                                        <CheckCircle2 className="h-5 w-5 text-green-500" />
-                                        <Typography variant="h6" className="font-semibold text-gray-900">
-                                            {stats.problemsSolved}
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-white/80 rounded-xl p-2 text-center">
+                                        <div className="flex items-center justify-center gap-2 mb-1">
+                                            <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                            <Typography variant="h6" className="font-semibold text-gray-900">
+                                                {stats.problemsSolved}
+                                            </Typography>
+                                        </div>
+                                        <Typography variant="small" className="text-gray-600">
+                                            Problems Solved
                                         </Typography>
                                     </div>
-                                    <Typography variant="small" className="text-gray-600">
-                                        Problems Solved
-                                    </Typography>
-                                </div>
-                                <div className="bg-white/80 rounded-xl p-2 text-center">
-                                    <div className="flex items-center justify-center gap-2 mb-1">
-                                        <FileText className="h-5 w-5 text-blue-500" />
-                                        <Typography variant="h6" className="font-semibold text-gray-900">
-                                            {stats.totalSubmissions}
-                                        </Typography>
-                                    </div>
-                                    <Typography variant="small" className="text-gray-600">
-                                        Total Submissions
+                                    <div className="bg-white/80 rounded-xl p-2 text-center">
+                                        <div className="flex items-center justify-center gap-2 mb-1">
+                                            <FileText className="h-5 w-5 text-blue-500" />
+                                            <Typography variant="h6" className="font-semibold text-gray-900">
+                                                {stats.totalSubmissions}
+                                            </Typography>
+                                        </div>
+                                        <Typography variant="small" className="text-gray-600">
+                                            Total Submissions
                                         </Typography>
                                     </div>
                                 </div>
@@ -234,7 +292,7 @@ const Profile = () => {
                     {/* Editable Details Form (right) */}
                     <form className="bg-transparent flex flex-col justify-between min-h-[260px] space-y-4" onSubmit={handleUpdateProfile}>
                         <div>
-                            {formErrors.FirstName && <div className="text-xs text-red-500 mb-1">{formErrors.FirstName}</div>}
+                            
                             <label className="text-bold text-gray-700 mb-1 block">Firstname</label>
                             <input
                                 type="text"
@@ -246,8 +304,8 @@ const Profile = () => {
                             />
                         </div>
                         <div>
-                            {formErrors.LastName && <div className="text-xs text-red-500 mb-1">{formErrors.LastName}</div>}
-                               <label className="text-bold text-gray-700 mb-1 block">Lastname</label>
+                            
+                            <label className="text-bold text-gray-700 mb-1 block">Lastname</label>
                             <input
                                 type="text"
                                 name="LastName"
@@ -258,7 +316,7 @@ const Profile = () => {
                             />
                         </div>
                         <div>
-                            {formErrors.Email && <div className="text-xs text-red-500 mb-1">{formErrors.Email}</div>}
+                           
                             <label className="text-bold text-gray-700 mb-1 block">Email</label>
                             <input
                                 type="email"
@@ -270,7 +328,7 @@ const Profile = () => {
                             />
                         </div>
                         <div>
-                            {formErrors.Username && <div className="text-xs text-red-500 mb-1">{formErrors.Username}</div>}
+                            
                             <label className="text-bold text-gray-700 mb-1 block">Username</label>
                             <input
                                 type="text"
@@ -282,7 +340,7 @@ const Profile = () => {
                             />
                         </div>
                         <div>
-                            {formErrors.PhoneNumber && <div className="text-xs text-red-500 mb-1">{formErrors.PhoneNumber}</div>}
+                           
                             <label className="text-bold text-gray-700 mb-1 block">Phonenumber</label>
                             <input
                                 type="text"
@@ -293,14 +351,28 @@ const Profile = () => {
                                 disabled={isLoading}
                             />
                         </div>
-                        <button
-                            type="submit"
-                            className="mt-2 px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors self-end"
-                            disabled={isLoading}
-                            onClick={handleUpdateProfile}
-                        >
-                            Save
-                        </button>
+                        <div className="flex justify-end gap-4 mt-4">
+                            <button
+                                type="submit"
+                                className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors"
+                                disabled={isLoading}
+                                onClick={handleUpdateProfile}
+                            >
+                                Save
+                            </button>
+                            <button
+                                type="button"
+                                className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition-colors"
+                                disabled={isLoading}
+                                onClick={() => {
+                                    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                                        handleDeleteAccount();
+                                    }
+                                }}
+                            >
+                                Delete Account
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
