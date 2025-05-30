@@ -19,8 +19,8 @@ const Home = () => {
     return (
         <Layout>
             {/* Info Section */}
-            <section className="py-16 md:py-24 text-center">
-                <h2 className="text-3xl md:text-5xl font-bold mb-6">
+            <section className="py-16 bg-gradient-to-b from-white to-gray-200 md:py-24 text-center">
+                <h2 className="text-3xl md:text-5xl  font-bold mb-6">
                     Code,Compete <span className="text-red-500">& Conquer</span>
                 </h2>
                 <p className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-oj-gray">
@@ -28,7 +28,7 @@ const Home = () => {
                     and climb the global leaderboard.
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
-                    <button size="lg" className="bg-red-500 rounded-md hover:bg-red-500/90 text-white px-8">
+                    <button size="lg" className="bg-red-500 rounded-md hover:bg-red-500/90 text-white px-8" onClick={() => navigate('/signin')}>
                         Get Started
                     </button>
                     <button size="lg" variant="outline" className="border-2 border-red-500 rounded-md bg-white text-red-500 hover:bg-red-100 px-8" onClick={() => navigate('/problems')}>
@@ -38,7 +38,7 @@ const Home = () => {
             </section>
 
             {/* Features Section */}
-            <section className="py-16 bg-gray-200 rounded-lg">
+            <section className="py-16 bg-gradient-to-b from-gray-200 to-white rounded-lg">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12">Why Choose Code Arena?</h2>
                     <div className="grid md:grid-cols-3 gap-8">
@@ -68,7 +68,7 @@ const Home = () => {
             </section>
 
             {/* Featured Problems Section */}
-            <section className="py-16">
+            <section className="py-16 bg-gradient-to-b from-white to-gray-200 rounded-lg">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl px-4 font-bold">Featured Problems</h2>
                     <Link to="/problems" className="flex items-center px-3 text-red-500 hover:underline">
@@ -95,15 +95,6 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Upcoming Contests Section */}
-            <section className="py-16">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl px-3 font-bold">Upcoming Contests</h2>
-                    <Link to="/contests" className="flex items-center text-red-500 px-3 hover:underline">
-                        View All <ArrowRight className="ml-1 h-4 w-4"/>
-                    </Link>
-                </div>
-            </section>
         </Layout>
     );
 };

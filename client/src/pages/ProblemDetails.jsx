@@ -233,7 +233,7 @@ const ProblemDetails = () => {
                         <div className="text-2xl text-white">{error}</div>  {/* only if sign in is included in the error message */}
                         {error.includes('Sign in') ? (
                             <button
-                                onClick={() => navigate('/')}
+                                onClick={() => navigate('/signin')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
                             >
                                 Go to Signin

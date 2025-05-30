@@ -10,8 +10,6 @@ const Leaderboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [userData, setUserData] = useState(null);
-    const [sortBy, setSortBy] = useState('rating');
-    const [sortOrder, setSortOrder] = useState('desc');
     const [stats, setStats] = useState({
         totalParticipants: 0,
         topRating: 0,
@@ -107,15 +105,6 @@ const Leaderboard = () => {
         return null;
     };
 
-        const handleSort = (field) => {
-            if (sortBy === field) {
-                setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-            } else {
-                setSortBy(field);
-                setSortOrder('desc');
-            }
-        };
-
     if (loading) {
         return (
             <div className="min-h-screen bg-black text-white">
@@ -139,14 +128,14 @@ const Leaderboard = () => {
                         <div className="text-2xl text-white">{error}</div>
                         {error.includes('Sign in') ? (
                         <button
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/signin')}
                             className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                         >
                             Go to Signin
                         </button>
                         ) : (
                             <button
-                                onClick={() => navigate('/home')}
+                                onClick={() => navigate('/')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Home

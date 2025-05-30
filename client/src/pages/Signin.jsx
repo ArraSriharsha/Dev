@@ -72,7 +72,7 @@ export const Signin = () => {
                 draggable: true,
                 theme: "dark"
             });
-            navigate('/home');
+            navigate('/');
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Failed to sign in';
             toast.error(errorMessage, {

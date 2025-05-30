@@ -83,14 +83,14 @@ const Problems = () => {
                         <div className="text-2xl text-white">{error}</div>
                         {error.includes('Sign in') ? (
                             <button
-                                onClick={() => navigate('/')}
+                                onClick={() => navigate('/signin')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Signin
                             </button>
                         ) : (
                             <button
-                                onClick={() => navigate('/home')}
+                                onClick={() => navigate('/')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Home

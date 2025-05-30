@@ -15,7 +15,7 @@ const Navbar = () => {
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center">
               <div className="flex-wrap px-3 py-1 border-2 border-red-500 rounded-md items-center">
-                <Link to="/home" >
+                <Link to="/" >
                   <span className="text-red-500 text-2xl font-bold">Code</span>
                   <span className="font-bold text-2xl">Arena</span>
                 </Link>
@@ -28,7 +28,7 @@ const Navbar = () => {
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center space-x-8">
                 <div className="flex items-center space-x-2">
-                  <button className="text-white rounded hover:text-red-500 px-2" onClick={() => navigate('/home')}>
+                  <button className="text-white rounded hover:text-red-500 px-2" onClick={() => navigate('/')}>
                     Home
                   </button>
                 </div>
@@ -41,7 +41,7 @@ const Navbar = () => {
               <div className="md:hidden pt-4 pb-3 space-y-3">
                 <MobileNavLinks closeMenu={closeMenu} />
                 <div className="flex flex-col space-y-2 pt-2 border-t border-gray-500">
-                  <button className="text-white hover:bg-red-500/80 py-1 rounded-md" onClick={() => navigate('/home')}>
+                  <button className="text-white hover:bg-red-500/80 py-1 rounded-md" onClick={() => navigate('/')}>
                     Home
                   </button>
                 </div>

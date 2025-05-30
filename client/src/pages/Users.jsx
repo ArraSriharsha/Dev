@@ -146,7 +146,7 @@ const Users = () => {
         } catch (error) {
             if (error.response?.status === 401) {
                 setError('Your session has expired. Please log in again.');
-                navigate('/');
+                navigate('/signin');
             } else {
                 const errorMessage = error.response?.data?.message || 'Failed to save user';
                 toast.error(errorMessage);
@@ -164,7 +164,7 @@ const Users = () => {
             } catch (error) {
                 if (error.response?.status === 401) {
                     setError('Your session has expired. Please log in again.');
-                    navigate('/');
+                    navigate('/signin');
                 } else {
                     const errorMessage = error.response?.data?.message || 'Failed to delete user';
                     toast.error(errorMessage);
@@ -227,14 +227,14 @@ const Users = () => {
                         <div className="text-2xl text-white">{error}</div>
                         {error.includes('Sign in') ? (
                             <button
-                                onClick={() => navigate('/')}
+                                onClick={() => navigate('/signin')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Signin
                             </button>
                             ) : (
                             <button
-                                onClick={() => navigate('/home')}
+                                onClick={() => navigate('/')}
                                 className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
                             >
                                 Go to Home
