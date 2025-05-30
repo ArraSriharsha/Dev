@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { getProblemById, runCode } from '../services/api';
-import { Play, Send, Loader2, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { getProblemById, runCode, getAiReview } from '../services/api';
+import { Play, Send, Loader2, ChevronLeft, ChevronRight, X, Sparkles } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import { submitCode } from '../services/api';
 
 const ProblemDetails = () => {
-    const { id } = useParams(); // comes from the url(react router dom) must use the same name as the route parameter.
     const navigate = useNavigate();
+    const { id } = useParams(); // comes from the url(react router dom) must use the same name as the route parameter.
     const [problem, setProblem] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -24,7 +24,10 @@ const ProblemDetails = () => {
     const [submitOutput, setSubmitOutput] = useState(null);
     const [showToast, setShowToast] = useState(false);
     const toastTimeoutRef = useRef(null);
-
+    const [aiReview, setAiReview] = useState(null);
+    const [showAiReview, setShowAiReview] = useState(false);
+    const [aiToastMessage, setAiToastMessage] = useState(null);
+    const [aiLoading, setAiLoading] = useState(false);
     const languageOptions = [
         { value: 'c', label: 'C' },
         { value: 'cpp', label: 'C++' },
@@ -160,7 +163,9 @@ const ProblemDetails = () => {
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
-        setOutput(null);
+        setSubmitOutput(null);
+        setAiToastMessage(null);
+
         try {
             const response = await submitCode({
                 problemId: id,
@@ -192,6 +197,30 @@ const ProblemDetails = () => {
             });
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleAiReview = async () => {
+        setAiLoading(true);
+        setSubmitOutput(null);
+        setAiReview(null);
+        setShowAiReview(false);
+        try {
+            const response = await getAiReview({
+                problemId: id,
+                code
+            });
+            setAiReview(response.data);
+            setShowAiReview(true);
+        } catch (error) {
+            setAiReview(null);
+            setShowToast(true);
+            setAiToastMessage({
+                error: true,
+                message: error.response?.data?.error || error.response?.data?.message || 'Failed to get AI review'
+            });
+        } finally {
+            setAiLoading(false);
         }
     };
 
@@ -243,12 +272,12 @@ const ProblemDetails = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-black to-red-300 text-white">
             <Navbar />
-            {showToast && submitOutput && (
+            {showToast && (submitOutput || aiToastMessage) && (
                 <div className={`fixed top-4 right-4 z-50 transform transition-all duration-300 ease-in-out ${showToast ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}>
                     <div className={`flex items-center p-4 rounded-lg shadow-lg ${
-                        submitOutput.error || submitOutput.message.includes('Wrong Answer') ? 'bg-red-500' : 'bg-green-500'
+                        (submitOutput?.error || submitOutput?.message?.includes('Wrong Answer') || aiToastMessage?.error) ? 'bg-red-500' : 'bg-green-500'
                     } text-white`}>
-                        <span className="flex-1">{submitOutput.message}</span>
+                        <span className="flex-1">{submitOutput?.message || aiToastMessage?.message}</span>
                         <button 
                             onClick={() => setShowToast(false)}
                             className="ml-4 hover:bg-white/20 rounded-full p-1 transition-colors"
@@ -257,6 +286,24 @@ const ProblemDetails = () => {
                         </button>
                     </div>
                 </div>
+            )}
+            {/* AI Review Modal */}
+            {showAiReview && aiReview && (
+                <div className="fixed inset-0 bg-black/50 flex overflow-y-auto justify-center z-50">
+                    <div className="bg-black/50 border border-red-500 overflow-y-auto rounded-lg z-50 p-6 max-w-2xl w-full mx-4 my-10 relative">
+                        <h2 className="text-xl font-semibold mb-4 text-red-400">AI Review</h2>
+                        <div className="prose prose-invert max-w-none">
+                            <p className="text-gray-300 whitespace-pre-wrap">{aiReview}</p>
+                        </div>
+                    </div>
+                    <button 
+                            onClick={() => setShowAiReview(false)}
+                            className="absolute top-4 right-4 hover:border-2 hover:border-red-500 bg-white mr-80 text-red-500 rounded-full p-1 transition-colors"
+                        >
+                            <X size={20} />
+                        </button>
+                </div>
+                
             )}
             <div  className="container mx-auto px-1 py-6 h-[calc(100vh-4rem)]">
                 <div
@@ -372,6 +419,18 @@ const ProblemDetails = () => {
                                             <Send size={16} />
                                         )}
                                         Submit
+                                    </button>
+                                    <button
+                                        onClick={handleAiReview}
+                                        disabled={aiLoading}
+                                        className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500 hover:bg-purple-600 text-white rounded text-sm transition-colors disabled:opacity-50"
+                                    >
+                                        {aiLoading ? (
+                                            <Loader2 className="animate-spin" size={16} />
+                                        ) : (
+                                            <Sparkles size={16} />
+                                        )}
+                                        AI Review
                                     </button>
                                 </div>
                             </div>

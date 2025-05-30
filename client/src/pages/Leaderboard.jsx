@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Trophy, TrendingUp, Star, Crown, ChevronUp, ChevronDown, Flame, Target } from 'lucide-react';
-import { getUsers, getProfile, getSubmissions } from '../services/api';
+import { getUsers, getProfile, getAllSubmissions } from '../services/api';
 import { toast } from 'react-toastify';
 
 const Leaderboard = () => {
@@ -27,7 +27,7 @@ const Leaderboard = () => {
                 const [usersResponse, profileResponse, submissionsResponse] = await Promise.all([
                     getUsers(),
                     getProfile(),
-                    getSubmissions()
+                    getAllSubmissions()
                 ]);
 
                 // Process user data with submissions
@@ -39,15 +39,15 @@ const Leaderboard = () => {
                     const solvedProblems = new Set(acceptedSubmissions.map(sub => sub.problemTitle));
                     
                     // Sum all scores from submissions for the user
-                    const totalScore = userSubmissions.reduce((acc, sub) => acc + (sub.score || 0), 0);
+                    const totalScore = userSubmissions.reduce((acc, sub) => acc + (sub.score || 0), 0); // 0 is the initial value of the accumulator.(acc,curval)
                     
                     return {
-                        id: user._id,
+                        id: user._id,                 // ...user copies all the properties of the user object.
                         username: user.Username,
                         rating: totalScore,
                         problemsSolved: solvedProblems.size,
                         rank: 0,
-                        lastActive: user.lastActive || new Date(),
+                        // lastActive: user.lastActive || new Date(),
                         role: user.Role
                     };
                 });

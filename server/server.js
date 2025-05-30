@@ -11,6 +11,7 @@ import run from './routes/run.js';
 import submit from './routes/submit.js';
 import submission from './routes/submission.js';
 import users from './routes/users.js';
+import aiReview from './routes/aiReview.js';
 
 dotenv.config();
 DBConnection();
@@ -39,6 +40,7 @@ app.use('/run', run);
 app.use('/submit', submit);
 app.use('/submissions', submission);
 app.use('/users', users);
+app.use('/ai-review', aiReview);
 // Basic route
 // app.get('/', (req, res) => {
 //     res.send('Welcome to the API')

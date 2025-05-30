@@ -59,7 +59,10 @@ export const getProfile = async () => {
   const response = await api.get('/profile');
   return response;
 };
-
+export const getAiReview = async (data) => {
+  const response = await api.post('/ai-review', data);
+  return response;
+};
 export const updateProfile = async (data) => {
   const response = await api.put('/profile/update', data);
   return response;
@@ -74,7 +77,10 @@ export const getSubmissions = async () => {
   const response = await api.get('/submissions');
   return response;
 };
-
+export const getAllSubmissions = async () => {
+  const response = await api.get('/submissions/all');
+  return response;
+};
 export const getUsers = async () => {
   const response = await api.get('/users');
   return response;

@@ -199,13 +199,13 @@ const Submissions = () => {
             {/* Code View Panel - Right Side */}
             {selectedSubmission && (
                 <div 
-                    className="code-panel fixed right-4 top-4 h-[calc(100vh-2rem)] w-[500px] bg-white/95 backdrop-blur-lg border border-red-400 shadow-2xl rounded-3xl p-6 overflow-y-auto z-50 transform transition-all duration-300 ease-in-out"
+                    className="code-panel fixed right-4 top-4 h-[calc(100vh-2rem)] w-[500px] bg-white/95 backdrop-blur-lg border border-red-400 overflow-y-auto shadow-2xl rounded-3xl p-6 z-50 transform transition-all duration-300 ease-in-out"
                     style={{
                         animation: 'slideIn 0.3s ease-out'
                     }}
                 >
-                    <div className="relative">
-                        <div className="flex justify-between items-center mb-4 sticky top-0 bg-white/95 backdrop-blur-sm py-2 z-10">
+                    <div className="relative overflow-y-auto">
+                        <div className="flex justify-between items-center mb-4 sticky top-0 bg-white/95 backdrop-blur-lg py-2 z-10">
                             <Typography variant="h5" className="font-bold text-gray-900">
                                 {selectedSubmission.problemTitle}
                             </Typography>
@@ -235,7 +235,7 @@ const Submissions = () => {
                                 {selectedSubmission.status || 'Pending'}
                             </span>
                         </div>
-                        <div className="bg-gray-900 rounded-xl p-4 overflow-x-auto shadow-inner">
+                        <div className="bg-gradient-to-t from-black to-gray-900 rounded-xl p-4 overflow-x-auto shadow-inner">
                             <pre className="text-gray-100 font-mono text-sm">
                                 <code>{selectedSubmission.code}</code>
                             </pre>
