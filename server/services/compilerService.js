@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import submission from '../models/Submissions.js';
 
 export const evaluateSubmission = async (problemId, userCode, language, submissionId) => {
-    console.log(submissionId);
+
     try {
         // Get problem details including test cases
         const newproblem = await problem.findById(problemId);
@@ -34,7 +34,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         if (!fs.existsSync(rootDir)) {
             fs.mkdirSync(rootDir, { recursive: true });
         }
-        const tempDir = path.join(rootDir, 'submissions'); 
+        const tempDir = path.join(rootDir, 'submissions');
         if (!fs.existsSync(tempDir)) {
             fs.mkdirSync(tempDir, { recursive: true });
         }
@@ -83,11 +83,40 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
             }
         }
         // After the for loop
-        if (allPassed) {
-            await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 100 });
+        const subDoc = await submission.findById(submissionId).select('userId problemTitle');
+        const { userId, problemTitle } = subDoc;
+
+        const submissionDoc = await submission.findOne({
+            userId,
+            problemTitle,
+            status: 'AC'
+        });
+
+        const aiSubmissionDoc = await submission.findOne({
+            userId,
+            problemTitle,
+            aiflag: true
+        });
+
+        if (!submissionDoc) {
+            if (allPassed) {
+                if (aiSubmissionDoc) {
+                    await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 40 });
+                } else {
+                    await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 100 });
+                }
+            } else {
+                await submission.findByIdAndUpdate(submissionId, { status: 'WA', score: -25 });
+            }
         } else {
-            await submission.findByIdAndUpdate(submissionId, { status: 'WA', score: -25 });
+            // Already accepted once before, award 0 points
+            if (allPassed) {
+                await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 0 });
+            } else {
+                await submission.findByIdAndUpdate(submissionId, { status: 'WA', score: -25 });
+            }
         }
+
 
         await cleanupTempFiles(tempDir);
 

@@ -19,7 +19,7 @@ const Submissions = () => {
                 const response = await getSubmissions();
                 const data = await getProfile();
                 setUserData(data.data);
-                setSubmissions(response.data);
+                setSubmissions(response.data.filter(s => s.status === 'AC' || s.status === 'WA'));
                 setError(null);
             } catch (error) {
                 setError(error.response?.data?.message || 'Failed to fetch submissions');
@@ -29,6 +29,7 @@ const Submissions = () => {
         };
         fetchSubmissions();
     }, []);
+    
 
     // Calculate pagination
     const indexOfLastSubmission = currentPage * submissionsPerPage;

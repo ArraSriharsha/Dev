@@ -6,8 +6,9 @@ const submissionSchema = new mongoose.Schema({
     status: {type: String, required: true},
     score: {type: Number, required: false, default: 0},
     problemTitle: {type: String, required: true},
-    language: {type: String, required: true},
+    language: {type: String, required: false},
     code: {type: String, required: false},
+    aiflag: {type: Boolean, required: false, default: false},
 });
 
 const submission = mongoose.model('submission', submissionSchema);
