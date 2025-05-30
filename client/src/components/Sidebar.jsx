@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {logout} from "../services/api.js"
 import { toast } from "react-toastify";
 const navItems = [
-  { to: "/home", icon: House, label: "Home" },
+  { to: "/", icon: House, label: "Home" },
   { to: "/problems", icon: Code, label: "Problems" },
   { to: "/profile", icon: CircleUser, label: "Profile" },
   { to: "/submissions", icon: Send, label: "Submissons" }

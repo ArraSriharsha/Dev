@@ -71,7 +71,7 @@ const Submissions = () => {
                     <Sidebar userData={userData || {}}/>
                 </div>
                 <div className="flex-1 flex items-center justify-center gap-2">
-                    <Typography className="text-red-500 font-bold">{error}</Typography>
+                    <Typography className="text-black -mt-10 text-3xl font-bold">{error}</Typography>
                 </div>
             </div>
         );

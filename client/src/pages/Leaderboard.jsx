@@ -232,8 +232,7 @@ const Leaderboard = () => {
                     <div className="overflow-y-auto h-[calc(100%-4rem)]">
                         {[...users]
                             .sort((a, b) => {
-                                const multiplier = sortOrder === 'asc' ? 1 : -1;
-                                return (a[sortBy] - b[sortBy]) * multiplier;
+                                return (b.rating - a.rating) 
                             })
                             .map((user) => (
                                 <div

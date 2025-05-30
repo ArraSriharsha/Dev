@@ -103,3 +103,8 @@ export const deleteUser = async (userId) => {
   const response = await api.delete(`/users/${userId}`);
   return response;
 };
+
+export const sendMessage = async (data) => {
+  const response = await api.post('/message', data);
+  return response;
+};
