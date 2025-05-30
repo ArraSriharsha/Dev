@@ -3,9 +3,7 @@ import { getHomeProblems, sendMessage } from '../services/api'
 import Layout from '../components/Layout'
 import { ArrowRight, Trophy, Users, Code, Loader, Loader2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
+import { toast } from 'react-toastify'
 const Home = () => {
     const navigate = useNavigate();
     const [featuredProblems, setFeaturedProblems] = useState([]);
@@ -52,17 +50,8 @@ const Home = () => {
 
     return (
         <Layout>
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                closeOnClick={true}
-                pauseOnHover={true}
-                draggable={true}
-                theme="dark"
-            />
             {/* Info Section */}
-            <section className="py-16 bg-gradient-to-b from-white to-gray-300 md:py-24 text-center">
+            <section className="py-16 bg-gradient-to-b from-white to-red-100 md:py-24 text-center">
                 <h2 className="text-3xl md:text-5xl  font-bold mb-6">
                     Code,Compete <span className="text-red-500">& Conquer</span>
                 </h2>
@@ -81,7 +70,7 @@ const Home = () => {
             </section>
 
             {/* Features Section */}
-            <section className="py-16 bg-gradient-to-b from-gray-300 to-white rounded-lg">
+            <section className="py-16 bg-gradient-to-b from-red-100 to-white rounded-lg">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12">Why Choose Code Arena?</h2>
                     <div className="grid md:grid-cols-3 gap-8">
@@ -111,7 +100,7 @@ const Home = () => {
             </section>
 
             {/* Featured Problems Section */}
-            <section className="py-16 bg-gradient-to-b from-white to-gray-300 rounded-lg">
+            <section className="py-16 bg-gradient-to-b from-white to-red-100 rounded-lg">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl px-6 font-bold font-roboto">Featured Problems</h2>
                     <Link to="/problems" className="flex items-center px-3 text-red-500 hover:underline">
@@ -139,7 +128,7 @@ const Home = () => {
             </section>
 
             {/* Problem Categories Section */}
-            <section id="categories" className="py-16 bg-gradient-to-b from-gray-300 to-white">
+            <section id="categories" className="py-16 bg-gradient-to-b from-red-100 to-white">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12 font-roboto">Problem Categories</h2>
                     <div className="grid md:grid-cols-3 gap-8">
@@ -237,7 +226,7 @@ const Home = () => {
             </section>
 
             {/* About Us Section */}
-            <section id="about" className="py-16 bg-gradient-to-b from-white to-gray-300">
+            <section id="about" className="py-16 bg-gradient-to-b from-white to-red-100">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12">About Code Arena</h2>
                     <div className="max-w-4xl mx-auto">
@@ -268,7 +257,7 @@ const Home = () => {
             </section>
 
             {/* Contact Section */}
-            <section id="contact" className="py-16 bg-gradient-to-b from-gray-300 to-white">
+            <section id="contact" className="py-16 bg-gradient-to-b from-red-100 to-white">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12">Get in Touch</h2>
                     <div className="max-w-4xl mx-auto">
