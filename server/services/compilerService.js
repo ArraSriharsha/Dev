@@ -30,11 +30,11 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
 
         // Create a temporary file for user's code
         const processDir = process.cwd();
-        const rootDir = path.join(path.dirname(processDir), 'eval');
+        const rootDir = path.join(path.dirname(processDir), 'eval');// inside OJ directory
         if (!fs.existsSync(rootDir)) {
             fs.mkdirSync(rootDir, { recursive: true });
         }
-        const tempDir = path.join(rootDir, 'submissions'); // inside OJ directory
+        const tempDir = path.join(rootDir, 'submissions'); 
         if (!fs.existsSync(tempDir)) {
             fs.mkdirSync(tempDir, { recursive: true });
         }

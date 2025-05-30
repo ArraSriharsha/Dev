@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getProblems } from '../services/api'
+import { getHomeProblems } from '../services/api'
 import Layout from '../components/Layout'
 import { ArrowRight, Trophy, Users, Code } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -10,13 +10,8 @@ const Home = () => {
     // Static featured problems
     useEffect(() => {
         const fetchFeaturedProblems = async () => {
-            const response = await getProblems({
-                limit: 4,
-                sort: {
-                    createdAt: -1
-                }
-            });
-            setFeaturedProblems(response.data.problems);
+            const response = await getHomeProblems();   
+            setFeaturedProblems(response.data);
         };
         fetchFeaturedProblems();
     }, []);

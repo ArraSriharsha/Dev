@@ -68,8 +68,9 @@ const Leaderboard = () => {
                 });
 
             } catch (error) {
-                if (error.response?.status === 401) {
-                    setError('Please sign in to view the leaderboard');
+                console.log(error);
+                if (error.response?.status === 401 || error.response?.status === 403) {
+                    setError('Please Sign in to view the leaderboard');
                 } else {
                     setError('Failed to fetch leaderboard data');
                     toast.error('Failed to load leaderboard data');
