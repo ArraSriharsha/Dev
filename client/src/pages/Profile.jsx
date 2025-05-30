@@ -25,8 +25,7 @@ const Profile = () => {
         LastName: '',
         Username: ''
     });
-    const [formErrors, setFormErrors] = useState({});
-    const [submissions, setSubmissions] = useState([]);
+    const [formErrors, setFormErrors] = useState({}); 
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -34,24 +33,23 @@ const Profile = () => {
             setIsLoading(true);
             try {
                 const response = await getProfile();
-                const role = response.data.role;
-                const submissions = await getSubmissions();
-                setSubmissions(submissions.data);
+                const res = await getSubmissions();
+                const SUB = await res.data.filter(sub => sub.status === 'AC' || sub.status === 'WA');
                 setUserData(response.data);
                 
                 // Calculate statistics
-                const uniqueProblems = new Set(submissions.data.map(sub => sub.problemTitle));
-                const passedSubmissions = submissions.data.filter(sub => sub.status === 'AC').length;
-                const accuracy = submissions.data.length > 0
-                    ? (passedSubmissions / submissions.data.length) * 100
+                const uniqueProblems = new Set(SUB.map(sub => sub.problemTitle));
+                const passedSubmissions = SUB.filter(sub => sub.status === 'AC').length;
+                const accuracy = SUB.length > 0
+                    ? (passedSubmissions / SUB.length) * 100
                     : 0;
 
                 
-                const totalScore = submissions.data.reduce((acc, sub) => acc + sub.score, 0);
+                const totalScore = SUB.reduce((acc, sub) => acc + sub.score, 0);
 
                 setStats({
                     problemsSolved: uniqueProblems.size,
-                    totalSubmissions: submissions.data.length,
+                    totalSubmissions: SUB.length,
                     accuracy: Math.round(accuracy),
                     score: totalScore
                 });
