@@ -108,3 +108,13 @@ export const sendMessage = async (data) => {
   const response = await api.post('/message', data);
   return response;
 };
+
+export const sendOTP = async (data) => {
+  const response = await api.post('/password/forgot', data);
+  console.log(response)
+  return response;
+};
+export const resetPassword = async (data) => {
+  const response = await api.post('/password/reset', data);
+  return response;
+};

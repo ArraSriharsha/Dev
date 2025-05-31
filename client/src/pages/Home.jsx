@@ -55,7 +55,7 @@ const Home = () => {
     return (
         <Layout>
             {/* Info Section */}
-            <section id="home" className="py-20 bg-gradient-to-br from-white to-red-100 md:py-32 text-center relative overflow-hidden">
+            <section id="home" className="py-20 bg-gradient-to-br from-white/80 to-red-100 md:py-32 text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
                 <div className="container mx-auto px-4 relative z-10">
                     <h2 className="text-4xl md:text-6xl font-bold mb-8 animate-fade-in">
@@ -113,7 +113,7 @@ const Home = () => {
             </section>
 
             {/* Featured Problems Section */}
-            <section className="py-20 bg-gradient-to-r from-white to-red-50">
+            <section className="py-20 bg-gradient-to-br from-white to-red-100">
                 <div className="container mx-auto px-4">
                     <div className="flex justify-between items-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold">Featured Problems</h2>
@@ -141,7 +141,7 @@ const Home = () => {
             </section>
 
             {/* Problem Categories Section */}
-            <section id="categories" className="py-16 bg-gradient-to-l from-red-50 to-white">
+            <section id="categories" className="py-16 bg-gradient-to-bl from-red-100 to-white">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12 font-roboto">Problem Categories</h2>
                     <div className="grid md:grid-cols-3 gap-8">
@@ -239,11 +239,11 @@ const Home = () => {
             </section>
 
             {/* About Us Section */}
-            <section id="about" className="py-16 bg-gradient-to-r from-white to-red-50">
+            <section id="about" className="py-16 bg-gradient-to-br from-white to-red-100">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12">About Code Arena</h2>
-                    <div className="max-w-4xl mx-auto">
-                        <div className="bg-white/60 backdrop-blur-lg border border-red-400 rounded-lg p-8 hover:shadow-lg transition-all duration-300">
+                    <div className="max-w-4xl hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-red-300/50 mx-auto">
+                        <div className="bg-white/60 backdrop-blur-lg border border-red-400 rounded-lg p-8 hover:shadow-lg hover:shadow-red-500 transition-all duration-300">
                             <p className="text-gray-700 text-lg mb-6">
                                 Code Arena is a premier platform for competitive programming enthusiasts. We provide a space where programmers can practice, compete, and grow their skills through our extensive collection of coding challenges.
                             </p>
@@ -270,11 +270,11 @@ const Home = () => {
             </section>
 
             {/* Contact Section */}
-            <section id="contact" className="py-20 bg-gradient-to-l from-red-50 to-white">
+            <section id="contact" className="py-20 bg-gradient-to-bl from-red-100 to-white">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">Get in Touch</h2>
                     <div className="max-w-4xl mx-auto">
-                        <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+                        <div className="bg-white hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-red-500 rounded-xl shadow-xl overflow-hidden">
                             <div className="grid md:grid-cols-2">
                                 <div className="bg-red-50 text-red-500 p-8">
                                     <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>

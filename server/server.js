@@ -14,6 +14,7 @@ import users from './routes/users.js';
 import aiReview from './routes/aiReview.js';
 import homeproblem from './routes/homeproblem.js';
 import message from './routes/message.js';
+import forgotpassword from './routes/forgotpassword.js';
 dotenv.config();
 DBConnection();
 
@@ -44,6 +45,7 @@ app.use('/users', users);
 app.use('/ai-review', aiReview);
 app.use('/homeproblem',homeproblem);
 app.use('/message',message);
+app.use('/password',forgotpassword);
 // Basic route
 // app.get('/', (req, res) => {
 //     res.send('Welcome to the API')

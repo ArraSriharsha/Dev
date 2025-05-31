@@ -49,42 +49,18 @@ export const Signin = () => {
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             setSubmitError('Please fill all required fields correctly');
-            toast.error('Please fill all required fields correctly', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                theme: "dark"
-            });
+            toast.error('Please fill all required fields correctly');
             setIsLoading(false);
             return;
         }
 
         try {
             const response = await signin(formData);
-            toast.success(`Welcome back, ${response.data.user.username}!`, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                theme: "dark"
-            });
+            toast.success(`Welcome back, ${response.data.user.username}!`);
             navigate('/');
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Failed to sign in';
-            toast.error(errorMessage, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                theme: "dark"
-            });
+            toast.error(errorMessage);
             setSubmitError(errorMessage);
         } finally {
             setIsLoading(false);
@@ -136,7 +112,7 @@ export const Signin = () => {
                     </div>
 
                     {/* Right side - Sign In Form */}
-                    <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-red-100">
+                    <div className="bg-white/80 backdrop-blur-lg hover:scale-105 transition-all duration-300 rounded-2xl p-8 shadow-xl border border-red-100">
                         <div className="flex items-center justify-center mb-8 md:hidden">
                             <img src="/logored.svg" alt="Code Arena" className="w-10 h-10 mr-2" />
                             <h1 className="text-2xl font-bold text-gray-800">
@@ -198,9 +174,9 @@ export const Signin = () => {
                                         Remember me
                                     </label>
                                 </div>
-                                <a href="#" className="text-sm text-red-500 hover:text-red-600 transition-colors duration-200">
+                                <Link to="/forgot-password" className="text-sm text-red-500 hover:underline hover:text-red-600 transition-colors duration-200">
                                     Forgot password?
-                                </a>
+                                </Link>
                             </div>
 
                             <button 
@@ -220,7 +196,7 @@ export const Signin = () => {
 
                             <p className="text-center text-sm text-gray-600">
                                 Don't have an account?{' '}
-                                <Link to="/signup" className="text-red-500 hover:text-red-600 transition-colors duration-200 font-medium">
+                                <Link to="/signup" className="text-red-500 hover:underline hover:text-red-600 transition-colors duration-200 font-medium">
                                     Register Here!
                                 </Link>
                             </p>

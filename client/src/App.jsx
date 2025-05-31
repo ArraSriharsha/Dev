@@ -13,6 +13,7 @@ import Submissions from './pages/Submissions.jsx'
 import UploadProblems from './pages/UploadProblems.jsx'
 import Users from './pages/Users.jsx'
 import Leaderboard from './pages/Leaderboard.jsx'
+import Forgot from './pages/Forgot.jsx'
 function App() {
   return (
     <Router>
@@ -30,7 +31,7 @@ function App() {
           <Route path='/uploadProblem' element={<UploadProblems />} />
           <Route path='/users' element={<Users />} />
           <Route path='/leaderboard' element={<Leaderboard />} />
-          
+          <Route path='/forgot-password' element={<Forgot />} />
         </Routes>
         <ToastContainer
           position="top-right"
