@@ -395,6 +395,20 @@ const ProblemDetails = () => {
                                         </option>
                                     ))}
                                 </select>
+                                <div className="flex items-center gap-4 text-sm">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-green-500">AC:</span>
+                                        <span className="text-white">100</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-purple-500">AC using AI:</span>
+                                        <span className="text-white">60</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-red-500">WA(any case):</span>
+                                        <span className="text-white">-25</span>
+                                    </div>
+                                </div>
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={handleRun}

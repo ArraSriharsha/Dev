@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { signin } from '../services/api'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { Code, Eye, EyeOff } from 'lucide-react'
 
 export const Signin = () => {
     const navigate = useNavigate()
@@ -62,8 +63,8 @@ export const Signin = () => {
         }
 
         try {
-            await signin(formData);
-            toast.success('Successfully logged in!', {
+            const response = await signin(formData);
+            toast.success(`Welcome back, ${response.data.user.username}!`, {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -91,67 +92,142 @@ export const Signin = () => {
     };
     
     return (
-        <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-b from-black to-red-200">
-            <div className="w-full h-full absolute">
-                <img src="/front.svg" className="w-full h-full object-cover opacity-70" alt="background" />
-            </div>
-            <div className="py-6 px-4 w-full max-w-6xl">
-
-                <div className="grid md:grid-cols-2 items-center gap-6">
-                    <div className="border-2 border-red-500/50 rounded-lg p-6 max-w-md shadow-lg bg-black/50 backdrop-blur-sm">
-                        <a className="flex items-center justify-center mb-6 text-2xl font-bold text-white">
-                            <img className="w-8 h-8 mr-2 text-red-500" src="/logo.svg" alt="logo" />
-                            <h2 className="text-2xl font-bold text-white">
+        <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-white to-red-300">
+            <div className="absolute inset-0 bg-[url('/front.svg')] bg-cover bg-center opacity-50"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-red-100/50"></div>
+            
+            <div className="w-full max-w-6xl px-4 py-8 relative z-10">
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                    {/* Left side - Welcome Message */}
+                    <div className="hidden md:block text-gray-800 space-y-6">
+                        <div className="flex items-center gap-3 mb-8">
+                            <img src="/logored.svg" alt="Code Arena" className="w-10 h-10" />
+                            <h1 className="text-3xl font-bold">
                                 Code <span className="text-red-500">Arena</span>
-                            </h2>
-                        </a>
-
-                        <form className="space-y-4" onSubmit={handleSubmit}>
-                            <div className="mb-8">
-                                <p className="text-gray-300 text-2xl text-center leading-relaxed">Sign in to your Account</p>
+                            </h1>
+                        </div>
+                        <h2 className="text-4xl font-bold leading-tight">
+                            Welcome Back to <br />
+                            <span className="text-red-500">Code Arena</span>
+                        </h2>
+                        <p className="text-gray-900 text-lg font-medium leading-relaxed">
+                            Sign in to continue your coding journey. Practice, compete, and conquer challenges with our community of developers.
+                        </p>
+                        <div className="mt-8 space-y-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                                    <Code className="w-4 h-4 text-red-500" />
+                                </div>
+                                <span className="text-gray-900 font-roboto">Access 1000+ coding problems</span>
                             </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                                    <Code className="w-4 h-4 text-red-500" />
+                                </div>
+                                <span className="text-gray-900 font-roboto">Participate in regular contests</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                                    <Code className="w-4 h-4 text-red-500" />
+                                </div>
+                                <span className="text-gray-900 font-roboto">Track your progress</span>
+                            </div>
+                        </div>
+                    </div>
 
+                    {/* Right side - Sign In Form */}
+                    <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-red-100">
+                        <div className="flex items-center justify-center mb-8 md:hidden">
+                            <img src="/logored.svg" alt="Code Arena" className="w-10 h-10 mr-2" />
+                            <h1 className="text-2xl font-bold text-gray-800">
+                                Code <span className="text-red-500">Arena</span>
+                            </h1>
+                        </div>
+
+                        <form className="space-y-6" onSubmit={handleSubmit}>
                             <div>
-                                <label className="text-white text-sm font-medium mb-2 block">Username or Email</label>
-                                <div className="relative flex items-center">
-                                    <input name="login" type="text" required className="w-full text-sm text-white bg-black/70 border-2 border-red-500/50 pl-4 pr-10 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="Enter username or email" onChange={handleChange} value={formData.login}/>
+                                <label className="text-gray-700 text-sm font-medium mb-2 block">Username or Email</label>
+                                <div className="relative">
+                                    <input 
+                                        name="login" 
+                                        type="text" 
+                                        required 
+                                        className="w-full text-gray-800 bg-white border border-red-200 pl-4 pr-10 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200" 
+                                        placeholder="Enter username or email" 
+                                        onChange={handleChange} 
+                                        value={formData.login}
+                                    />
                                 </div>
                             </div>
+
                             <div>
-                                <label className="text-white text-sm font-medium mb-2 block">Password</label>
-                                <div className="relative flex items-center">
-                                    <input name="password" type={showPassword ? "text" : "password"} required className="w-full text-sm text-white bg-black/70 border-2 border-red-500/50 pl-4 pr-10 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="Enter password" onChange={handleChange} value={formData.password}/>
-                                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white transition-colors duration-200">
-                                        <img src={showPassword ? "/eye-closed.svg" : "/eye-open.svg"} alt={showPassword ? "Hide password" : "Show password"} className="w-5 h-5 text-red-500" />
+                                <label className="text-gray-700 text-sm font-medium mb-2 block">Password</label>
+                                <div className="relative">
+                                    <input 
+                                        name="password" 
+                                        type={showPassword ? "text" : "password"} 
+                                        required 
+                                        className="w-full text-gray-800 bg-white border border-red-200 pl-4 pr-10 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200" 
+                                        placeholder="Enter password" 
+                                        onChange={handleChange} 
+                                        value={formData.password}
+                                    />
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setShowPassword(!showPassword)} 
+                                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-red-500 transition-colors duration-200"
+                                    >
+                                        {showPassword ? (
+                                            <EyeOff className="w-5 h-5" />
+                                        ) : (
+                                            <Eye className="w-5 h-5" />
+                                        )}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="flex flex-wrap items-center justify-between gap-4">
+                            <div className="flex items-center justify-between">
                                 <div className="flex items-center">
-                                    <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 shrink-0 text-red-500 focus:ring-red-500 border-2 border-white rounded bg-black/70" />
-                                    <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-300">
+                                    <input 
+                                        id="remember-me" 
+                                        name="remember-me" 
+                                        type="checkbox" 
+                                        className="h-4 w-4 text-red-500 focus:ring-red-500 border-gray-300 rounded" 
+                                    />
+                                    <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-600">
                                         Remember me
                                     </label>
                                 </div>
-                                {/* TODO: Add forgot password functionality */}
-                                <div className="text-sm">
-                                    <a href="#" className="text-white hover:text-red-400 transition-colors duration-200 font-medium">
-                                        Forgot your password?
-                                    </a>
-                                </div>
+                                <a href="#" className="text-sm text-red-500 hover:text-red-600 transition-colors duration-200">
+                                    Forgot password?
+                                </a>
                             </div>
 
-                            <div className="!mt-12">
-                                <button type="submit" className="w-full shadow-xl py-2.5 px-4 text-[15px] font-medium tracking-wide rounded-lg text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-500/50 cursor-pointer transition-all duration-200" disabled={isLoading}>
-                                    {isLoading ? 'Signing in...' : 'Sign in'}
-                                </button>
-                                <p className="text-sm !mt-6 text-center text-gray-400">Don't have an account ? <Link to="/signup" className="text-white hover:text-red-400 transition-colors duration-200 font-medium ml-1 whitespace-nowrap">Register Here!</Link></p>
-                            </div>
+                            <button 
+                                type="submit" 
+                                className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                                        Signing in...
+                                    </div>
+                                ) : (
+                                    'Sign in'
+                                )}
+                            </button>
+
+                            <p className="text-center text-sm text-gray-600">
+                                Don't have an account?{' '}
+                                <Link to="/signup" className="text-red-500 hover:text-red-600 transition-colors duration-200 font-medium">
+                                    Register Here!
+                                </Link>
+                            </p>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};

@@ -93,8 +93,8 @@ export const Signup = () => {
         }
 
         try {
-            await signup(formData);
-            toast.success('Account created successfully! Please sign in.', {
+            const response = await signup(formData);
+            toast.success(`Hello ${response.data.user.username}!`, {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -122,14 +122,14 @@ export const Signup = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-10 relative bg-gradient-to-b from-black to-red-200">
+        <div className="min-h-screen flex items-center justify-center  py-10 relative bg-gradient-to-b from-black to-red-200">
             <div className="absolute inset-0">
                 <img src="/front.svg" className="w-full h-full object-cover opacity-70" alt="background" />
             </div>
 
-            <div className="w-full max-w-6xl relative z-10">
+            <div className="w-full max-w-6xl relative z-10 ">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
-                    <div className="border-2 border-red-500/50 rounded-xl p-6 md:p-8 shadow-2xl bg-black/60 backdrop-blur-sm max-w-md w-full mx-auto">
+                    <div className="border-2 border-red-500/50 rounded-xl p-4 md:p-8 shadow-2xl bg-black/60 backdrop-blur-sm max-w-md w-full mx-auto">
                         <a className="flex items-center justify-center mb-6 text-2xl font-bold text-white">
                             <img className="w-8 h-8 mr-2 text-red-500" src="/logo.svg" alt="logo" />
                             <h2 className="text-2xl font-bold text-white">
