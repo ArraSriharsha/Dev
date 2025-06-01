@@ -2,12 +2,11 @@ import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import problem from '../models/Problems.js';
-import { compareOutputs } from '../utils/testCaseHandler.js';
+import { compareOutputs, getTestCasesFromS3 } from '../utils/testCaseHandler.js';
 import { v4 as uuidv4 } from 'uuid';
 import submission from '../models/Submissions.js';
 
 export const evaluateSubmission = async (problemId, userCode, language, submissionId) => {
-
     try {
         // Get problem details including test cases
         const newproblem = await problem.findById(problemId);
@@ -15,14 +14,9 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
             throw new Error('Problem not found');
         }
 
-        // Validate test case paths
-        if (!newproblem.testCasesInputPath || !newproblem.testCasesOutputPath) {
+        // Validate test case keys
+        if (!newproblem.testCasesInputKey || !newproblem.testCasesOutputKey) {
             throw new Error('Test case files not found for this problem');
-        }
-
-        // Check if test case files exist
-        if (!fs.existsSync(newproblem.testCasesInputPath) || !fs.existsSync(newproblem.testCasesOutputPath)) {
-            throw new Error('Test case files are missing');
         }
 
         const results = [];
@@ -30,7 +24,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
 
         // Create a temporary file for user's code
         const processDir = process.cwd();
-        const rootDir = path.join(path.dirname(processDir), 'eval');// inside OJ directory
+        const rootDir = path.join(processDir, 'eval');// inside OJ directory
         if (!fs.existsSync(rootDir)) {
             fs.mkdirSync(rootDir, { recursive: true });
         }
@@ -42,12 +36,11 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         const userCodePath = path.join(tempDir, `${jobId}.${language}`);
         fs.writeFileSync(userCodePath, userCode);
 
-        const inputContent = fs.readFileSync(newproblem.testCasesInputPath, 'utf-8');
-        const testCases = inputContent.split('\n\n').map(tc => tc.trim());
-
-        // Read and validate output file
-        const outputContent = fs.readFileSync(newproblem.testCasesOutputPath, 'utf-8');
-        const expectedOutputs = outputContent.split('\n\n').map(output => output.trim());
+        // Get test cases from S3
+        const { testCases, expectedOutputs } = await getTestCasesFromS3(
+            newproblem.testCasesInputKey,
+            newproblem.testCasesOutputKey
+        );
 
         let count = 0;
 
@@ -82,6 +75,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
                 break;
             }
         }
+
         // After the for loop
         const subDoc = await submission.findById(submissionId).select('userId problemTitle');
         const { userId, problemTitle } = subDoc;
@@ -117,7 +111,6 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
             }
         }
 
-
         await cleanupTempFiles(tempDir);
 
         return {
@@ -126,12 +119,10 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
             totalTestCases: newproblem.testCaseCount
         };
 
-
     } catch (error) {
         throw new Error(`Evaluation failed: ${error.message}`);
     }
 };
-
 
 export const executeCode = async (filepath, language, inputfilePath) => {
     const dirPath = path.dirname(filepath);

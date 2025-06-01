@@ -47,9 +47,7 @@ app.use('/homeproblem',homeproblem);
 app.use('/message',message);
 app.use('/password',forgotpassword);
 // Basic route
-// app.get('/', (req, res) => {
-//     res.send('Welcome to the API')
-// });
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`); // ("runing on port" + process.env.PORT)

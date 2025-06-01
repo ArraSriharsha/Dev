@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import path from 'path';
+import { getTestCases } from './s3Service.js';
 
 // Function to validate test cases during problem creation
 export const validateTestCases = async (inputFilePath, outputFilePath) => {
@@ -42,4 +42,21 @@ export const compareOutputs = (userOutput, expectedOutput) => {
     const normalizedExpectedOutput = expectedOutput.trim().replace(/\r\n/g, '\n');
     
     return normalizedUserOutput === normalizedExpectedOutput;
+};
+
+// Function to get test cases from S3
+export const getTestCasesFromS3 = async (inputKey, outputKey) => {
+    try {
+        const { inputContent, outputContent } = await getTestCases(inputKey, outputKey);
+        
+        const testCases = inputContent.split('\n\n').map(tc => tc.trim());
+        const expectedOutputs = outputContent.split('\n\n').map(output => output.trim());
+
+        return {
+            testCases,
+            expectedOutputs
+        };
+    } catch (error) {
+        throw new Error(`Failed to get test cases from S3: ${error.message}`);
+    }
 }; 

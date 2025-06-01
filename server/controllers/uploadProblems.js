@@ -1,8 +1,8 @@
 import problem from '../models/Problems.js';
 import { validateTestCases } from '../utils/testCaseHandler.js';
-import path from 'path';
 import fs from 'fs/promises';
 import user from '../models/User.js';
+import { uploadTestCases, deleteTestCases } from '../utils/s3Service.js';
 
 const validateRequiredFields = (fields) => {
     const errors = [];
@@ -73,6 +73,10 @@ export const uploadProblem = async (req, res) => {
                 message: error.message || 'Error validating test cases'
             });
         }
+
+        // Read file contents
+        const inputContent = await fs.readFile(inputFile.path, 'utf-8');
+        const outputContent = await fs.readFile(outputFile.path, 'utf-8');
         
         // Create new problem first to get its ID
         const newproblem = new problem({
@@ -83,43 +87,38 @@ export const uploadProblem = async (req, res) => {
             constraints: constraints.split(',').map(c => c.trim()),
             examples: JSON.parse(examples),
             testCaseCount: testCaseCount
-
         });
 
         // Save to get the ID
         await newproblem.save();
 
-        const currentDir = process.cwd(); // server directory
-        const dirpath = path.dirname(currentDir); // OJ directory
-        const baseTestCasesDir = path.join(dirpath, 'testcases');
+        try {
+            // Upload test cases to S3
+            const { inputKey, outputKey } = await uploadTestCases(newproblem.title, inputContent, outputContent);
 
-        // Create problem-specific directory
-        const problemDir = path.join(baseTestCasesDir, newproblem.title);
-        await fs.mkdir(problemDir, { recursive: true });
+            // Update problem with S3 keys
+            newproblem.testCasesInputKey = inputKey;
+            newproblem.testCasesOutputKey = outputKey;
+            await newproblem.save();
 
-        // Move files to problem-specific directory
-        const inputFilePath = path.join(problemDir, 'input.txt');
-        const outputFilePath = path.join(problemDir, 'output.txt');
-        
-        await fs.rename(inputFile.path, inputFilePath);
-        await fs.rename(outputFile.path, outputFilePath);
+            // Clean up local files
+            await fs.unlink(inputFile.path);
+            await fs.unlink(outputFile.path);
 
-
-        // Update problem with file paths
-        newproblem.testCasesInputPath = inputFilePath;
-        newproblem.testCasesOutputPath = outputFilePath;
-        
-        await newproblem.save();
-
-        res.status(201).json({
-            success: true,
-            message: 'Problem uploaded successfully',
-            data: {
-                problemId: newproblem._id,
-                title: newproblem.title,
-                testCaseCount: newproblem.testCaseCount
-            }
-        });
+            res.status(201).json({
+                success: true,
+                message: 'Problem uploaded successfully',
+                data: {
+                    problemId: newproblem._id,
+                    title: newproblem.title,
+                    testCaseCount: newproblem.testCaseCount
+                }
+            });
+        } catch (error) {
+            // If S3 upload fails, delete the problem and throw error
+            await problem.findByIdAndDelete(newproblem._id);
+            throw error;
+        }
 
     } catch (error) {
         res.status(500).json({
@@ -186,29 +185,26 @@ export const updateProblem = async (req, res) => {
                 });
             }
 
-            const currentDir = process.cwd();
-            const dirpath = path.dirname(currentDir);
-            const problemDir = path.join(dirpath, 'testcases', newproblem.title);
+            // Read file contents
+            const inputContent = await fs.readFile(inputFile.path, 'utf-8');
+            const outputContent = await fs.readFile(outputFile.path, 'utf-8');
 
-            // Move files to problem-specific directory
-            const inputFilePath = path.join(problemDir, 'input.txt');
-            const outputFilePath = path.join(problemDir, 'output.txt');
-
-            // Delete old files if they exist
-            try {
-                await fs.unlink(inputFilePath);
-                await fs.unlink(outputFilePath);
-            } catch (error) {
-                console.error('Error deleting old test case files:', error);
+            // Delete old test cases from S3 if they exist
+            if (newproblem.testCasesInputKey && newproblem.testCasesOutputKey) {
+                await deleteTestCases(newproblem.testCasesInputKey, newproblem.testCasesOutputKey);
             }
 
-            // Move new files
-            await fs.rename(inputFile.path, inputFilePath);
-            await fs.rename(outputFile.path, outputFilePath);
+            // Upload new test cases to S3
+            const { inputKey, outputKey } = await uploadTestCases(newproblem.title, inputContent, outputContent);
 
-            newproblem.testCasesInputPath = inputFilePath;
-            newproblem.testCasesOutputPath = outputFilePath;
+            // Update problem with new S3 keys
+            newproblem.testCasesInputKey = inputKey;
+            newproblem.testCasesOutputKey = outputKey;
             newproblem.testCaseCount = testCaseCount;
+
+            // Clean up local files
+            await fs.unlink(inputFile.path);
+            await fs.unlink(outputFile.path);
         }
 
         // Update other fields if provided
@@ -285,14 +281,9 @@ export const deleteProblem = async (req, res) => {
             });
         }
 
-        // Delete problem directory and all its contents
-        const currentDir = process.cwd();
-        const dirpath = path.dirname(currentDir);
-        const problemDir = path.join(dirpath, 'testcases', newproblem.title);
-        try {
-            await fs.rm(problemDir, { recursive: true, force: true });
-        } catch (error) {
-            console.error('Error deleting problem directory:', error);
+        // Delete test cases from S3 if they exist
+        if (newproblem.testCasesInputKey && newproblem.testCasesOutputKey) {
+            await deleteTestCases(newproblem.testCasesInputKey, newproblem.testCasesOutputKey);
         }
 
         // Delete the problem

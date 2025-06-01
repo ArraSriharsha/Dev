@@ -13,8 +13,8 @@ const problemSchema = new mongoose.Schema({
   description: { type: String, required: true },
   examples: [exampleSchema],
   constraints: [{ type: String, required: true }],
-  testCasesInputPath: { type: String, required: false },
-  testCasesOutputPath: { type: String, required: false },
+  testCasesInputKey: { type: String, required: false },
+  testCasesOutputKey: { type: String, required: false },
   testCaseCount: { type: Number, default: 0 }
 }, {
   timestamps: true

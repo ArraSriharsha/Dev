@@ -3,7 +3,7 @@ import path from 'path';
 import { v4 as uuid } from 'uuid';
 
 const currentDir = process.cwd();
-const rootDir = path.join(path.dirname(currentDir),'eval'); 
+const rootDir = path.join(currentDir,'eval'); 
 if(!fs.existsSync(rootDir)){
     fs.mkdirSync(rootDir, { recursive: true });
 }

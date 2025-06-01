@@ -6,7 +6,7 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 const currentDir = process.cwd();
-const rootDir = path.join(path.dirname(currentDir),'eval');
+const rootDir = path.join(currentDir,'eval');
 if(!fs.existsSync(rootDir)){
     fs.mkdirSync(rootDir, { recursive: true });
 }
