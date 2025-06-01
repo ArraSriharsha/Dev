@@ -3,6 +3,8 @@ import submission from '../models/Submissions.js';
 import { evaluateSubmission } from '../utils/submitcode.js';
 import path from 'path';
 import fs from 'fs';
+import { v4 as uuid } from 'uuid';
+
 export const submitCode = async (req, res) => {
     const { problemId, code, language, userId } = req.body;
     const submissionDate = new Date();
@@ -19,14 +21,12 @@ export const submitCode = async (req, res) => {
             });
         }
         const processDir = process.cwd();
-        const rootDir = path.join(processDir, 'eval');
+        const executionId = uuid();
+        const rootDir = path.join(processDir, `${executionId}`);
         if (!fs.existsSync(rootDir)) {
             fs.mkdirSync(rootDir, { recursive: true });
         }
-        const runDir = path.join(rootDir, 'run');
-        if (!fs.existsSync(runDir)) {
-            fs.mkdirSync(runDir, { recursive: true });
-        }
+        
         const newSubmission = new submission({
             userId,
             submissionDate,
@@ -37,7 +37,7 @@ export const submitCode = async (req, res) => {
             code
         });
         await newSubmission.save();
-        const result = await evaluateSubmission(problemId, code, language, newSubmission._id);
+        const result = await evaluateSubmission(problemId, code, language, newSubmission._id, rootDir);
         res.status(200).json(result);
     } catch (error) {
         console.error("Error in submitting code:", error.message);

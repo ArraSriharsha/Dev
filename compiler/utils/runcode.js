@@ -7,23 +7,23 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 
-export const generateFile = async (language, code) => {
+export const generateFile = async (rootDir,language, code) => {
     const jobId = uuid();
-    const filepath = path.join(process.cwd(), 'eval', 'run', `${jobId}.${language}`);
+    const filepath = path.join(rootDir, `${jobId}.${language}`);
     await fs.writeFileSync(filepath, code);
     return filepath;
 }
 
-export const generateInputFile = async (input) => {
+export const generateInputFile = async (rootDir,input) => {
     const jobId = uuid();
-    const filepath = path.join(process.cwd(), 'eval', 'run', `${jobId}.txt`);
+    const filepath = path.join(rootDir, `${jobId}.txt`);
     await fs.writeFileSync(filepath, input || ''); 
     return filepath;
 }
 
-export const executeCode = async (filepath, language, inputfilePath) => {
+export const executeCode = async (rootDir,filepath, language, inputfilePath) => {
     const jobId = path.basename(filepath).split(".")[0];
-    const outPath = path.join(process.cwd(), 'eval', 'run', `${jobId}.out`);
+    const outPath = path.join(rootDir, `${jobId}.out`);
     let command;
     switch(language){
         case 'c':

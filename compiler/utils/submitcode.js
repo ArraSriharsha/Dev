@@ -7,7 +7,7 @@ import { cleanupTempFiles } from '../utils/cleanup.js';
 import { getTestCasesFromS3, compareOutputs } from './testcasehandler.js';
 
 
-export const evaluateSubmission = async (problemId, userCode, language, submissionId) => {
+export const evaluateSubmission = async (problemId, userCode, language, submissionId, rootDir) => {
     try {
         // Get problem details including test cases
         const newproblem = await problem.findById(problemId);
@@ -23,16 +23,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         let allPassed = true;
 
         // Create a temporary file for user's code
-        const processDir = process.cwd();
-        const rootDir = path.join(processDir, 'eval');// inside OJ directory
-        if (!fs.existsSync(rootDir)) {
-            fs.mkdirSync(rootDir, { recursive: true });
-        }
-        const tempDir = path.join(rootDir, 'submissions');
-        if (!fs.existsSync(tempDir)) {
-            fs.mkdirSync(tempDir, { recursive: true });
-        }
-        const filepath = await generateFile(language, userCode);
+        const filepath = await generateFile(rootDir,language, userCode);
 
         // Get test cases from S3
         const { testCases, expectedOutputs } = await getTestCasesFromS3(
@@ -49,9 +40,9 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
 
             try {
                 // Create temporary input file for this test case
-                const testcasePath = await generateInputFile(testCase);
+                const testcasePath = await generateInputFile(rootDir,testCase);
                 // Execute the code with the test case
-                const result = await executeCode(filepath, language, testcasePath);
+                const result = await executeCode(rootDir,filepath, language, testcasePath);
 
                 if (result.error) {
                     allPassed = false;
@@ -107,7 +98,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
             }
         }
 
-        await cleanupTempFiles(tempDir);
+        await cleanupTempFiles(rootDir);
 
         return {
             allPassed,

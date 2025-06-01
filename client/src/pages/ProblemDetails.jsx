@@ -114,6 +114,14 @@ const ProblemDetails = () => {
         setIsRunning(true);
         setOutput(null);
         try {
+            if (!code.trim()) {
+                setOutput({
+                    error: true,
+                    message: 'Please enter some code to run'
+                });
+                return;
+            }
+
             const response = await runCode({
                 code: code,
                 language: selectedLanguage,
@@ -141,7 +149,7 @@ const ProblemDetails = () => {
         } catch (error) {
             setOutput({
                 error: true,
-                message: error.response?.data?.error || 'Failed to run code'
+                message: error.response?.data?.error || error.response?.data?.message || 'Failed to run code'
             });
         } finally {
             setIsRunning(false);

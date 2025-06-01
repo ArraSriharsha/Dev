@@ -7,7 +7,6 @@ const COMPILER_URL = process.env.COMPILER_SERVICE_URL;
 
 export const runCode = async (req, res) => {
   const { code, language, input } = req.body;
-
   try {
     const response = await axios.post(`${COMPILER_URL}/run`, {
       code,
