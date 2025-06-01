@@ -1,5 +1,5 @@
 import express from 'express';
-import { submitCode } from '../controllers/runController.js';
+import { submitCode } from '../controllers/codeController.js';
 import { protect } from '../middleware/middleauth.js';
 
 const router = express.Router();

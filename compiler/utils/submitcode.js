@@ -1,10 +1,11 @@
-import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import problem from '../models/Problems.js';
-import { compareOutputs, getTestCasesFromS3 } from '../utils/testCaseHandler.js';
-import { v4 as uuidv4 } from 'uuid';
 import submission from '../models/Submissions.js';
+import { executeCode, generateFile, generateInputFile } from '../utils/runcode.js';
+import { cleanupTempFiles } from '../utils/cleanup.js';
+import { getTestCasesFromS3, compareOutputs } from './testcasehandler.js';
+
 
 export const evaluateSubmission = async (problemId, userCode, language, submissionId) => {
     try {
@@ -19,7 +20,6 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
             throw new Error('Test case files not found for this problem');
         }
 
-        const results = [];
         let allPassed = true;
 
         // Create a temporary file for user's code
@@ -32,9 +32,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         if (!fs.existsSync(tempDir)) {
             fs.mkdirSync(tempDir, { recursive: true });
         }
-        const jobId = uuidv4();
-        const userCodePath = path.join(tempDir, `${jobId}.${language}`);
-        fs.writeFileSync(userCodePath, userCode);
+        const filepath = await generateFile(language, userCode);
 
         // Get test cases from S3
         const { testCases, expectedOutputs } = await getTestCasesFromS3(
@@ -51,11 +49,9 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
 
             try {
                 // Create temporary input file for this test case
-                const testcasePath = path.join(tempDir, `input_${i + 1}.txt`);
-                fs.writeFileSync(testcasePath, testCase);
-
+                const testcasePath = await generateInputFile(testCase);
                 // Execute the code with the test case
-                const result = await executeCode(userCodePath, language, testcasePath);
+                const result = await executeCode(filepath, language, testcasePath);
 
                 if (result.error) {
                     allPassed = false;
@@ -123,81 +119,3 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         throw new Error(`Evaluation failed: ${error.message}`);
     }
 };
-
-export const executeCode = async (filepath, language, inputfilePath) => {
-    const dirPath = path.dirname(filepath);
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-    }
-    const jobid = path.basename(filepath).split(".")[0]; //basename gives filename without directory and split gives array of filename and extension
-    // jobid-ef5e8abf-7625-40a4-8107-dec079e628a6
-    const outPath = path.join(dirPath, `${jobid}.out`);
-    // outPath- /Users/harsha/Desktop/OJ/server/utils/outputs/ef5e8abf-7625-40a4-8107-dec079e628a6.out
-    //const command = `g++ ${filepath} -o ${outPath} && ${outPath}`;
-    let command;
-    switch (language) {
-        case 'c':
-            command = `gcc ${filepath} -o ${outPath} && ${outPath} < ${inputfilePath}`;
-            break;
-        case 'cpp':
-            command = `g++ ${filepath} -o ${outPath} && ${outPath} < ${inputfilePath}`;
-            break;
-        case 'py':
-            command = `python3 ${filepath} < ${inputfilePath}`;
-            break;
-        case 'js':
-            command = `node ${filepath} < ${inputfilePath}`;
-            break;
-        case 'java':
-            command = `java ${filepath} < ${inputfilePath}`;
-            break;
-        default:
-            throw new Error('Invalid language');
-    }
-    // command- g++ /Users/harsha/Desktop/OJ/server/utils/codes/ef5e8abf-7625-40a4-8107-dec079e628a6.cpp -o /Users/harsha/Desktop/OJ/server/utils/outputs/ef5e8abf-7625-40a4-8107-dec079e628a6.out && /Users/harsha/Desktop/OJ/server/utils/outputs/ef5e8abf-7625-40a4-8107-dec079e628a6.out
-    return new Promise((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                resolve({
-                    error: true,
-                    stderr: error.message || stderr || 'Unknown error occurred'
-                });
-            } else if (stderr) {
-                resolve({
-                    error: true,
-                    stderr: stderr
-                });
-            } else {
-                resolve({
-                    error: false,
-                    stdout: stdout || ''
-                });
-            }
-        });
-    });
-};
-
-export const cleanupTempFiles = async (tempDir) => {
-    try {
-        // First clean up the run directory
-        if (fs.existsSync(tempDir)) {
-            const files = await fs.readdirSync(tempDir);
-            await Promise.all(files.map(file => fs.unlinkSync(path.join(tempDir, file))));
-            // Remove the run directory
-            await fs.rmdirSync(tempDir);
-            console.log('Cleaned up run directory');
-        }
-
-        // Then clean up the eval directory
-        const evalDir = path.join(process.cwd(), 'eval');
-        if (fs.existsSync(evalDir)) {
-            const evalFiles = await fs.readdirSync(evalDir);
-            if (evalFiles.length === 0) {
-                await fs.rmdirSync(evalDir);
-                console.log('Cleaned up eval directory');
-            }
-        }
-    } catch (error) {
-        console.error('Error cleaning up temporary files:', error);
-    }
-}; 

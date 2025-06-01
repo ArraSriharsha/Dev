@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -40,33 +40,6 @@ export const uploadTestCases = async (problemTitle, inputContent, outputContent)
         };
     } catch (error) {
         throw new Error(`Failed to upload test cases to S3: ${error.message}`);
-    }
-};
-
-export const getTestCases = async (inputKey, outputKey) => {
-    try {
-        // Get input file
-        const inputCommand = new GetObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: inputKey
-        });
-        const inputResponse = await s3Client.send(inputCommand);
-        const inputContent = await inputResponse.Body.transformToString();
-
-        // Get output file
-        const outputCommand = new GetObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: outputKey
-        });
-        const outputResponse = await s3Client.send(outputCommand);
-        const outputContent = await outputResponse.Body.transformToString();
-
-        return {
-            inputContent,
-            outputContent
-        };
-    } catch (error) {
-        throw new Error(`Failed to get test cases from S3: ${error.message}`);
     }
 };
 

@@ -115,13 +115,13 @@ const ProblemDetails = () => {
         setOutput(null);
         try {
             const response = await runCode({
-                code:code,
+                code: code,
                 language: selectedLanguage,
-                input:input
+                input: input
             });
 
             // Handle the response data
-            if(response.data.error){
+            if (response.data.error) {
                 setOutput({
                     error: true,
                     message: response.data.error
@@ -131,24 +131,11 @@ const ProblemDetails = () => {
                     error: true,
                     message: response.data.output.error
                 });
-            } else if (response.data.output.stderr) {
-                if(response.data.output.stdout){
-                    setOutput({
-                        error: false,
-                        output: response.data.output.stdout,
-                        stderr: response.data.output.stderr
-                    });
-                }
-                else{
-                    setOutput({
-                        error: true,
-                        message: response.data.output.stderr
-                    });
-                }
             } else {
                 setOutput({
                     error: false,
-                    output: response.data.output.stdout
+                    output: response.data.output.stdout || '',
+                    stderr: response.data.output.stderr || ''
                 });
             }
         } catch (error) {

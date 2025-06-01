@@ -1,7 +1,8 @@
 import express from 'express';
-import { runCode, submitCode } from '../controllers/runController.js';
-
+import { runCode } from '../controllers/codeController.js';
+import { protect } from '../middleware/middleauth.js';
 const router = express.Router();
 
-router.post('/', runCode);
+router.post('/',protect, runCode);
+
 export default router;
