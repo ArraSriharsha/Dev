@@ -10,7 +10,7 @@ const rootDir = path.join(currentDir,'eval');
 if(!fs.existsSync(rootDir)){
     fs.mkdirSync(rootDir, { recursive: true });
 }
-const outputPath = path.join(rootDir, 'outputs');
+const outputPath = path.join(rootDir, 'run');
 // const __filename = fileURLToPath(import.meta.url); // current file path
 
 if(!fs.existsSync(outputPath)) {

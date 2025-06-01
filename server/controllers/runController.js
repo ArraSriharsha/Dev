@@ -4,19 +4,35 @@ import { generateInputFile } from "../utils/generateInputFile.js";
 import { evaluateSubmission } from "../services/compilerService.js";
 import submission from "../models/Submissions.js";
 import problem from "../models/Problems.js";
+import { cleanupTempFiles } from "../services/compilerService.js";
+import path from 'path';
+import fs from 'fs';
 
 export const runCode = async (req, res) => {
-    const { code, language,input } = req.body;
+    const { code, language, input } = req.body;
 
     if(!code) {
         return res.status(400).json({ error: 'Code is required' });
     }
 
     try {
+        // Create directories for this run
+        const processDir = process.cwd();
+        const rootDir = path.join(processDir, 'eval');
+        if (!fs.existsSync(rootDir)) {
+            fs.mkdirSync(rootDir, { recursive: true });
+        }
+        const runDir = path.join(rootDir, 'run');
+        if (!fs.existsSync(runDir)) {
+            fs.mkdirSync(runDir, { recursive: true });
+        }
+
         const filepath = await generateFile(language, code);
         const inputfilePath = await generateInputFile(input);
-        const output = await executeCpp(filepath,language,inputfilePath);
-        res.status(200).json({ filepath, output });
+        const output = await executeCpp(filepath, language, inputfilePath);
+        const dir = path.dirname(filepath);
+        await cleanupTempFiles(dir);
+        res.status(200).json({ output });
     } catch (error) {
         console.error("Error in running code:", error.message);
         return res.status(500).json({ 
@@ -25,6 +41,7 @@ export const runCode = async (req, res) => {
         });
     }
 };
+
 export const submitCode = async (req, res) => {
     const { problemId, code, language } = req.body;
     const userId = req.user._id;
