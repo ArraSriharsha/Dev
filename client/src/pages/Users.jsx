@@ -39,8 +39,13 @@ const Users = () => {
 
             // First get user profile to check if admin
             const profileResponse = await getProfile();
-            setUserData(profileResponse.data);
-
+            if(profileResponse){
+                setUserData(profileResponse.data);
+            }
+            else{
+                setError('Please Sign in to access this page');
+                return;
+            }
             if (profileResponse.data.role !== 'Admin') {
                 setError('You do not have permission to access this page');
                 return;

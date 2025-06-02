@@ -4,13 +4,13 @@ import jwt from 'jsonwebtoken';
 
 export const getUsers = async (req, res) => {
     try {
-        const token = req.cookies.token;
-        if(!token) {
-            return res.status(401).json({message: "No token found"});
-        }
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        const id = decoded.userId;
-        const currentUser = await user.findById(id).select('Role');
+        // const token = req.cookies.token;
+        // if(!token) {
+        //     return res.status(401).json({message: "No token found"});
+        // }
+        // const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        // const id = decoded.userId;
+        // const currentUser = await user.findById(id).select('Role');
         
         // if (currentUser.Role !== 'Admin') {
         //     return res.status(403).json({

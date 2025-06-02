@@ -14,24 +14,26 @@ import UploadProblems from './pages/UploadProblems.jsx'
 import Users from './pages/Users.jsx'
 import Leaderboard from './pages/Leaderboard.jsx'
 import Forgot from './pages/Forgot.jsx'
+import Compiler from './pages/Compiler.jsx'
 function App() {
   return (
     <Router>
       <div className="app-container">
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/signin' element={<Signin />} />
-          <Route path='/signup' element={<Signup />} />
-          <Route path='/problems' element={<Problems />} />
-          <Route path='/problems/:id' element={<ProblemDetails />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/logout' element={<Home />} />
-          <Route path='/run' element={<Home />} />
-          <Route path='/submissions' element={<Submissions />} />
-          <Route path='/uploadProblem' element={<UploadProblems />} />
-          <Route path='/users' element={<Users />} />
-          <Route path='/leaderboard' element={<Leaderboard />} />
+          <Route path='/' element={<Home />} /> {/* Unprotected route */}
+          <Route path='/signin' element={<Signin />} /> {/* Unprotected route */}
+          <Route path='/signup' element={<Signup />} /> {/* Unprotected route */}
+          <Route path='/problems' element={<Problems />} /> {/* Unprotected route */}
+          <Route path='/problems/:id' element={<ProblemDetails />} /> {/* Protected route */}
+          <Route path='/profile' element={<Profile />} /> {/* Protected route */}
+          {/*<Route path='/logout' element={<Home />} /> {/* Unprotected route */} 
+          <Route path='/run' element={<Home />} /> {/* Unprotected route need to check*/}
+          <Route path='/submissions' element={<Submissions />} /> {/* Protected route */}
+          <Route path='/uploadProblem' element={<UploadProblems />} /> {/* Protected route */}
+          <Route path='/users' element={<Users />} /> {/* Protected route */}
+          <Route path='/leaderboard' element={<Leaderboard />} /> {/* Unprotected route */}
           <Route path='/forgot-password' element={<Forgot />} />
+          <Route path='/compiler' element={<Compiler />} /> {/* Unprotected route */}
         </Routes>
         <ToastContainer
           position="top-right"

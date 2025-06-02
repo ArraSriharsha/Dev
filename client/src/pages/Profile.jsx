@@ -32,8 +32,8 @@ const Profile = () => {
         const fetchUserData = async () => {
             setIsLoading(true);
             try {
-                const response = await getProfile();
-                const res = await getSubmissions();
+                const response = await getProfile(); //returns null if not signed in
+                const res = await getSubmissions(); // throws error if not signed in
                 const SUB = await res.data.filter(sub => sub.status === 'AC' || sub.status === 'WA');
                 setUserData(response.data);
                 

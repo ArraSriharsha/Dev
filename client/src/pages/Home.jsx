@@ -45,8 +45,12 @@ const Home = () => {
                 toast.error('Failed to send message')
             }
         } catch (error) {
-            console.error('Error sending message:', error);
-            toast.error('Failed to send message')
+            if(error.response.status === 401){
+                toast.error('Please Sign in to send message')
+            }
+            else{
+                toast.error('Failed to send message')
+            }
         } finally {
             setIsLoading(false);
         }

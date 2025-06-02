@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5009/';
+const API_URL = import.meta.env.VITE_SERVER_URL;
+
+//axios automatically detects the error and throws it by status code(!2xx), so we don't need to handle it in the catch block
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -47,7 +49,10 @@ export const runCode = async (data) => {
   const response = await api.post('/run', data);
   return response;
 };
-
+export const runCodeCompiler = async (data) => {
+  const response = await api.post('/run/compiler', data);
+  return response;
+};
 export const submitCode = async (data) => {
   const response = await api.post('/submit', data);
   return response;
@@ -59,11 +64,22 @@ export const logout = async () => {
 };
 
 export const getProfile = async () => {
-  const response = await api.get('/profile');
-  return response;
+  try{
+    const response = await api.get('/profile');
+    return response;
+  }catch(error){
+    if(error.response.status == 401){
+      return null; 
+    }
+    return error.response;
+  }
 };
 export const getAiReview = async (data) => {
   const response = await api.post('/ai-review', data);
+  return response;
+};
+export const getReviewCode = async (data) => {
+  const response = await api.post('/review', data);
   return response;
 };
 export const updateProfile = async (data) => {
@@ -81,8 +97,11 @@ export const getSubmissions = async () => {
   return response;
 };
 export const getAllSubmissions = async () => {
-  const response = await api.get('/submissions/all');
-  return response;
+  
+    const response = await api.get('/submissions/all');
+    return response;
+ 
+  
 };
 export const getUsers = async () => {
   const response = await api.get('/users');

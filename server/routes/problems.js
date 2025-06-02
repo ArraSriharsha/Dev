@@ -5,8 +5,9 @@ import { deleteProblem, updateProblem } from '../controllers/uploadProblems.js';
 import uploadfile from '../middleware/middleupload.js';
 const router = express.Router();
 
-// Protected routes - requires authentication
-router.get('/', protect, getProblems);
+// Public route
+router.get('/', getProblems);
+// Protected route
 router.get('/:id', protect, getProblemById);
 router.delete('/:id', protect, deleteProblem);
 router.put('/:id', protect, uploadfile.fields([

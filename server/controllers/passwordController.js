@@ -3,10 +3,9 @@ import user from '../models/User.js';
 import bcrypt from 'bcryptjs';
 
 export const sendOTP = async (req, res) => {
+    
     const { email } = req.body;
-    console.log(email);
     const newuser = await user.findOne({Email : email});
-    console.log(newuser);
     if (!newuser) {
         return res.status(404).json({ message: 'User not found' });
     }

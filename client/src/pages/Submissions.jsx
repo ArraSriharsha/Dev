@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
 import { Typography, Card, Spinner, Button } from "@material-tailwind/react";
 import { FileText, Code2, Clock, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getSubmissions, getProfile } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const Submissions = () => {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [submissions, setSubmissions] = useState([]);
@@ -66,12 +69,27 @@ const Submissions = () => {
 
     if (error) {
         return (
-            <div className="h-screen bg-gradient-to-br from-black via-red-100 to-red-200 flex items-center justify-center relative">
-                <div className="w-20 flex-shrink-0">
-                    <Sidebar userData={userData || {}}/>
-                </div>
-                <div className="flex-1 flex items-center justify-center gap-2">
-                    <Typography className="text-black -mt-10 text-3xl font-bold">{error}</Typography>
+            <div className="min-h-screen bg-black text-white">
+                <Navbar />
+                <div className="container mx-auto px-4 py-8">
+                    <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
+                        <div className="text-2xl text-white">{error}</div>
+                        {error.includes('Sign in') ? (
+                            <button
+                                onClick={() => navigate('/signin')}
+                                className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
+                            >
+                                Go to Signin
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => navigate('/')}
+                                className="px-6 py-2 bg-red-500 hover:bg-red-500/30 text-white border border-red-500/30 rounded-lg transition-colors"
+                            >
+                                Go to Home
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         );

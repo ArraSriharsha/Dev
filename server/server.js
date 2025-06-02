@@ -15,6 +15,7 @@ import aiReview from './routes/aiReview.js';
 import homeproblem from './routes/homeproblem.js';
 import message from './routes/message.js';
 import forgotpassword from './routes/forgotpassword.js';
+import review from './routes/review.js';
 dotenv.config();
 DBConnection();
 
@@ -27,7 +28,7 @@ app.use(cookieParser());
 
 // CORS configuration
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: process.env.CLIENT_URL ,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -46,6 +47,7 @@ app.use('/ai-review', aiReview);
 app.use('/homeproblem',homeproblem);
 app.use('/message',message);
 app.use('/password',forgotpassword);
+app.use('/review',review);
 // Basic route
 
 

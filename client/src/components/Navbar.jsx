@@ -55,10 +55,12 @@ const Navbar = () => {
   const NavLinks = () => {
     return (
       <>
+        <Link to="/compiler" className="hover:text-red-500 transition-colors">
+          Compiler
+        </Link>
         <Link to="/problems" className="hover:text-red-500 transition-colors">
           Problems
         </Link>
-        
         <Link to="/leaderboard" className="hover:text-red-500 transition-colors">
           Leaderboard
         </Link>

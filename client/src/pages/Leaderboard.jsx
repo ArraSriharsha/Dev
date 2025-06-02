@@ -55,7 +55,9 @@ const Leaderboard = () => {
                     .map((user, index) => ({ ...user, rank: index + 1 }));
 
                 setUsers(sortedUsers);
-                setUserData(profileResponse.data);
+                if(profileResponse){
+                    setUserData(profileResponse.data);
+                }
 
                 // Calculate stats
                 setStats({

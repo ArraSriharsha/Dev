@@ -37,7 +37,9 @@ const UploadProblems = () => {
             setError(null);
             
             const profileResponse = await getProfile();
-            setUserData(profileResponse.data);
+            
+            if(profileResponse){
+                setUserData(profileResponse.data);
 
             if (profileResponse.data.role !== 'Admin' && profileResponse.data.role !== 'Moderator') {
                 setError('You do not have permission to access this page');
@@ -45,8 +47,14 @@ const UploadProblems = () => {
             }
       
             const problemsResponse = await getProblems(profileResponse.data.role ==='Moderator' ? {username:profileResponse.data.username} : null);
+            
             setProblems(problemsResponse.data.problems);
             setTotalPages(Math.ceil(problemsResponse.data.problems.length / problemsPerPage));
+        }
+        else{
+            setError('Please Sign in to access this page');
+            return;
+        }
         } catch (error) {
             if (error.response?.status === 401) {
                 setError('Please Sign in to access this page');
@@ -84,6 +92,7 @@ const UploadProblems = () => {
         if (form.inputFile) {
             formData.append('inputFile', form.inputFile);
         }
+        
         if (form.outputFile) {
             formData.append('outputFile', form.outputFile);
         }

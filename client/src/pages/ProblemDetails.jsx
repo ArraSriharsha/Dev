@@ -285,8 +285,8 @@ const ProblemDetails = () => {
             {/* AI Review Modal */}
             {showAiReview && aiReview && (
                 <div className="fixed inset-0 bg-black/50 flex overflow-y-auto justify-center z-50">
-                    <div className="bg-black/50 border border-red-500 overflow-y-auto rounded-lg z-50 p-6 max-w-2xl w-full mx-4 my-10 relative">
-                        <h2 className="text-xl font-semibold mb-4 text-red-400">AI Review</h2>
+                    <div className="bg-black border border-red-500 overflow-y-auto rounded-lg z-50 p-6 max-w-2xl w-full mx-4 my-10 relative">
+                        <h2 className="text-xl font-semibold mb-4 text-red-500">AI Review</h2>
                         <div className="prose prose-invert max-w-none">
                             <p className="text-gray-300 whitespace-pre-wrap">{aiReview}</p>
                         </div>

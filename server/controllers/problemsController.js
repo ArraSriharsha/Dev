@@ -1,9 +1,7 @@
 import Problem from '../models/Problems.js';
-import user from '../models/User.js';
+
 export const getProblems = async (req, res) => {
     try {
-        const { id } = req.user;  
-        const role = await user.findById(id).select('role');
         const username = req.query.username;
         const page = parseInt(req.query.page) || 1; // converts string to number; if not provided, defaults to 1
         const limit = parseInt(req.query.limit) || 0; // converts string to number; if not provided, defaults to 5
@@ -20,7 +18,7 @@ export const getProblems = async (req, res) => {
         if (search) {
             query.$or = [
                 { title: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } }
+                { description: { $regex: search, $options: 'i' } } // i case insensitive, $regex(mongodb query operator) matches partial string, $options is a regex option
             ];
         }
         if (username) {
@@ -40,7 +38,6 @@ export const getProblems = async (req, res) => {
             currentPage: page,
             totalPages: Math.ceil(total / limit),
             totalProblems: total,
-            role: role
         });
     } catch (error) {
         console.error('Error fetching problems:', error);
