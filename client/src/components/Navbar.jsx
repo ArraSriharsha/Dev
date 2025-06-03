@@ -74,6 +74,12 @@ const Navbar = () => {
   const MobileNavLinks = ({ closeMenu }) => {
     return (
       <>
+        <Link to="/compiler" 
+        className="block hover:text-red-500 transition-colors py-2"
+         onClick={closeMenu}
+          Compiler
+        >
+        </Link>
         <Link 
           to="/problems" 
           className="block hover:text-red-500 transition-colors py-2"
