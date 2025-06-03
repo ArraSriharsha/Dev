@@ -26,7 +26,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const allowedOrigins = process.env.CLIENT_URL.split(',').map(url => url.trim());
+const allowedOrigins = [ 
+  'https://www.codearena.tech',  // Production frontend
+  'https://api.codearena.tech'   // Production API
+];
 
 app.use(cors({
   origin: function (origin, callback) {
