@@ -134,10 +134,10 @@ const Compiler = () => {
                             </button>
                             <button
                                 onClick={handleAiReview}
-                                disabled={isRunning}
+                                disabled={aiLoading}
                                 className="w-full flex items-center justify-center gap-2 px-6 py-2 mt-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors disabled:opacity-50 shadow-lg hover:shadow-xl"
                             >
-                                {isRunning ? (
+                                {aiLoading ? (
                                     <>
                                         <Loader2 className="w-5 h-5 animate-spin" />
                                         Reviewing...

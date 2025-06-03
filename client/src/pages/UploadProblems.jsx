@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Typography, Card } from "@material-tailwind/react";
-import { Trash2, Edit2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Trash2, Edit2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { getProblems, uploadProblem, deleteProblem, getProfile, updateProblem } from '../services/api';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ const UploadProblems = () => {
     const [error, setError] = useState(null);
     const [selectedProblem, setSelectedProblem] = useState(null);
     const [userData, setUserData] = useState(null);
+    const [buttonLoading,setButtonLoading] = useState(false);
     const [form, setForm] = useState({
         title: '',
         difficulty: '',
@@ -83,6 +84,7 @@ const UploadProblems = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setButtonLoading(true);
         const formData = new FormData();
         formData.append('title', form.title);
         formData.append('difficulty', form.difficulty);
@@ -109,6 +111,9 @@ const UploadProblems = () => {
             resetForm();
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to save problem');
+        }
+        finally{
+            setButtonLoading(false);
         }
     };
 
@@ -411,9 +416,14 @@ const UploadProblems = () => {
                                 )}
                                 <button
                                     type="submit"
+                                    disabled={buttonLoading}
                                     className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors"
                                 >
-                                    {selectedProblem ? 'Update Problem' : 'Upload Problem'}
+                                    {buttonLoading ? (
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                    ) : (
+                                        selectedProblem ? 'Update Problem' : 'Upload Problem'
+                                    )}
                                 </button>
                             </div>
                         </form>
