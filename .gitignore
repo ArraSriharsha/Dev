@@ -16,6 +16,7 @@ dist
 dist-ssr
 *.local
 .env
+keys
 codes
 outputs
 inputs
