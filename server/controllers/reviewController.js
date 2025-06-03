@@ -3,20 +3,24 @@ import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
 
-const genAI = new GoogleGenAI({apiKey: process.env.COMPILER_API_KEY}); // apiKEY mention else error?
+const genAI = new GoogleGenAI({ apiKey: process.env.COMPILER_API_KEY });
 
-export const getReviewCode = async (req,res) => {
-    const {code,language}=req.body;
+export const getReviewCode = async (req, res) => {
+  const { code, language } = req.body;
+  try {
     const response = await genAI.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: `
-        First, explain the goal of the code in short.
-        Then, mention and fix any syntax errors.Mention the inefficiencies in the code.
-        Finally, give the complexity of the code and suggest a code(if exists) that has better complexity.
-        Make it as short as possible.
-        Code: ${code}
-        Language: ${language}
-        `,
-      });
-    return response.text;
+      model: "gemini-2.0-flash",
+      contents: `
+            review the code.
+            Code:${code}`,
+          });
+
+    res.status(200).json(response.text);
+  } catch (error) {
+    console.error('Review error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 };
