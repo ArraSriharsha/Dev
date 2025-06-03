@@ -57,9 +57,37 @@ export const getTestCasesFromS3 = async (inputKey, outputKey) => {
 
 // Function to compare user output with expected output
 export const compareOutputs = (userOutput, expectedOutput) => {
-    // Normalize both outputs by trimming whitespace and normalizing line endings
-    const normalizedUserOutput = userOutput.trim().replace(/\r\n/g, '\n');
-    const normalizedExpectedOutput = expectedOutput.trim().replace(/\r\n/g, '\n');
+    // Split both outputs into lines
+    const userLines = userOutput.split('\n').filter(line => line.trim().length > 0);
+    const expectedLines = expectedOutput.split('\n').filter(line => line.trim().length > 0);
 
-    return normalizedUserOutput === normalizedExpectedOutput;
+    // Compare number of lines
+    if (userLines.length !== expectedLines.length) {
+        return false;
+    }
+
+    // Compare each line
+    for (let i = 0; i < userLines.length; i++) {
+        // Split each line into tokens
+        const userTokens = userLines[i].trim().split(/\s+/);
+        const expectedTokens = expectedLines[i].trim().split(/\s+/);
+
+        // Compare number of tokens in each line
+        if (userTokens.length !== expectedTokens.length) {
+            return false;
+        }
+
+        // Compare each token
+        for (let j = 0; j < userTokens.length; j++) {
+            // Try to parse as number only if it's a pure number
+            const userNum = /^-?\d*\.?\d+$/.test(userTokens[j]) ? parseFloat(userTokens[j]) : userTokens[j];
+            const expectedNum = /^-?\d*\.?\d+$/.test(expectedTokens[j]) ? parseFloat(expectedTokens[j]) : expectedTokens[j];
+
+            if (userNum !== expectedNum) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 };

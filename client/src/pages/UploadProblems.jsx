@@ -372,7 +372,7 @@ const UploadProblems = () => {
                             </div>
 
                             <div>
-                                <label className="text-gray-700 mb-1 block">Input Test Cases File</label>
+                                <label className="text-gray-700  block">Input Test Cases File</label><span className="text-red-500">*Insert Two New Lines between each Testcase</span>
                                 <input
                                     type="file"
                                     name="inputFile"
@@ -383,7 +383,7 @@ const UploadProblems = () => {
                             </div>
 
                             <div>
-                                <label className="text-gray-700 mb-1 block">Output Test Cases File</label>
+                            <label className="text-gray-700  block">Output Test Cases File</label><span className="text-red-500">*Insert Two New Lines between each Testcase</span>
                                 <input
                                     type="file"
                                     name="outputFile"

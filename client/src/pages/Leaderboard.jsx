@@ -30,7 +30,7 @@ const Leaderboard = () => {
 
                 // Process user data with submissions
                 const processedUsers = usersResponse.data.users.map(user => {
-                    const userSubmissions = submissionsResponse.data.filter(sub => sub.userId === user._id);
+                    const userSubmissions = submissionsResponse.data.filter(sub => sub.userId === user._id); //if account is deleted,no stats in leaderboard 
                     
                     // Count only unique problems that were accepted using problemTitle
                     const acceptedSubmissions = userSubmissions.filter(sub => sub.status === 'AC');
@@ -123,7 +123,7 @@ const Leaderboard = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-black via-black to-black text-white">
+            <div className="min-h-screen bg-black text-white">
                 <Navbar />
                 <div className="container mx-auto px-4 py-8 mt-14">
                     <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
@@ -150,16 +150,16 @@ const Leaderboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-t from-black via-red-100 to-red-200">
+        <div className="min-h-screen bg-gradient-to-l from-red-100 to-white">
             <Navbar />
             <div className="container mx-auto px-6 mt-14">
                 {/* Header Section */}
                 <div className="mb-8 transition-opacity duration-300">
-                    <h1 className="text-4xl font-bold text-black mb-2 flex items-center gap-3">
+                    <h1 className="text-4xl text-black font-bold text-black mb-2 flex items-center gap-3">
                         <Trophy className="w-8 h-8 text-red-500" />
                         Global <span className="text-red-500">Leaderboard</span>
                     </h1>
-                    <p className="text-gray-800">Compete with the best programmers and climb the ranks!</p>
+                    <p className="text-gray-500">Compete with the best programmers and climb the ranks!</p>
                 </div>
 
                 {/* Stats Overview */}
@@ -169,7 +169,7 @@ const Leaderboard = () => {
                             icon: Trophy, 
                             label: 'Total Participants', 
                             value: stats.totalParticipants,
-                            color: 'bg-white/80',
+                            color: 'bg-white',
                             iconColor: 'text-red-500'
                         },
                         { 
@@ -196,7 +196,7 @@ const Leaderboard = () => {
                     ].map((stat, index) => (
                         <div
                             key={stat.label}
-                            className="bg-white/60 backdrop-blur-lg border border-red-400 hover:scale-105 transition-all duration-300 shadow-2xl rounded-3xl p-6 group"
+                            className="bg-white backdrop-blur-lg border border-red-400 hover:scale-105 transition-all duration-300 shadow-2xl rounded-3xl p-6 group"
                         >
                             <div className="flex items-center gap-3">
                                 <div className={`p-3 rounded-xl ${stat.color} group-hover:scale-110 transition-transform duration-300`}>
@@ -212,9 +212,9 @@ const Leaderboard = () => {
                 </div>
 
                 {/* Scrollable Container - Only for the Table */}
-                <div className="bg-white/100 backdrop-blur-lg border border-red-500/50 shadow-2xl ml-5 mr-5 hover:scale-105 transition-all duration-300 rounded-3xl overflow-hidden h-[calc(100vh-24rem)]">
+                <div className="bg-white backdrop-blur-lg border border-red-500 shadow-2xl ml-5 mr-5 hover:scale-105 transition-all duration-300 rounded-3xl overflow-hidden h-[calc(100vh-24rem)]">
                     {/* Table Header - Sticky */}
-                    <div className="grid grid-cols-12 gap-4 p-6 bg-white/100 border-b border-red-400/50 sticky top-0 z-10">
+                    <div className="grid grid-cols-12 gap-4 p-6 bg-white border-b border-red-400/50 sticky top-0 z-10">
                         <div className="col-span-1 text-center text-black font-semibold">Rank</div>
                         <div className="col-span-4 text-black font-semibold">User</div>
                         <div 
@@ -239,7 +239,7 @@ const Leaderboard = () => {
                             .map((user) => (
                                 <div
                                     key={user.id}
-                                    className={`grid grid-cols-12 gap-4 p-6 border-b border-red-400/30 hover:bg-red-400/30 transition-all duration-300 relative ${
+                                    className={`grid grid-cols-12 gap-4 p-6 border-b border-red-400/30 hover:bg-red-500/20 transition-all duration-300 relative ${
                                         userData?.username === user.username ? 'bg-red-400/30 border-red-500/50' : ''
                                     }`}
                                 >

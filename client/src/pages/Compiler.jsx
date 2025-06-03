@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Loader2, ArrowRight, ArrowDown, Wand, X } from 'lucide-react';
+import { Play, Loader2, ArrowRight, ArrowDown, Wand, X, Code2, Terminal, MessageSquare, SquareMousePointer } from 'lucide-react';
 import { toast } from 'react-toastify';
 import Editor from '@monaco-editor/react';
 import Navbar from '../components/Navbar';
@@ -51,7 +51,6 @@ const Compiler = () => {
                 input: input
             });
 
-            // Handle the response data
             if (response.data.error) {
                 setOutput({
                     error: true,
@@ -76,148 +75,151 @@ const Compiler = () => {
         }
     };
 
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-200 via-red-100 to-red-100">
+        <div className="min-h-screen bg-gradient-to-br from-red-200 via-red-100 to-red-300">
             <Navbar />
-            <div className="container mx-auto mt-4 px-2 py-2">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {/* Left Column - Code Editor */}
-                        <div className="mb-4">
-                            <div className="flex items-center justify-between">
+            <div className="container mx-auto px-4 py-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Left Column - Code Editor */}
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between bg-black p-4 rounded-lg shadow-sm border border-black">
+                            <div className="flex items-center space-x-4">
+                                <SquareMousePointer className="w-7 h-7 text-red-500" />
                                 <select
                                     value={language}
                                     onChange={(e) => setLanguage(e.target.value)}
-                                    className="px-1 py-2 bg-white border border-red-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm"
+                                        className="bg-white text-gray-700 px-3 py-1.5 rounded-md text-sm border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                 >
                                     <option value="c">C</option>
                                     <option value="cpp">C++</option>
                                     <option value="java">Java</option>
                                     <option value="py">Python</option>
                                     <option value="js">JavaScript</option>
-
                                 </select>
                             </div>
-
-                            <div className="bg-white rounded-lg shadow-lg overflow-x-auto overflow-y-auto border mt-2 border-red-200">
-                                <Editor
-                                    height="550px"
-                                    language={language}
-                                    theme="vs-light"
-                                    value={code}
-                                    onChange={setCode}
-                                    options={{
-                                        minimap: { enabled: false },
-                                        fontSize: 14,
-                                        wordWrap: 'on',
-                                        automaticLayout: true,
-                                    }}
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 mt-1 gap-2">
-                            <button
-                                onClick={handleRun}
-                                disabled={isRunning}
-                                className="w-full flex items-center justify-center gap-2 px-6 py-2 mt-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors disabled:opacity-50 shadow-lg hover:shadow-xl "
-                            >
-                                {isRunning ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        Running...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Play className="w-5 h-5" />
-                                        Run Code
-                                    </>
-                                )}
-                            </button>
-                            <button
-                                onClick={handleAiReview}
-                                disabled={aiLoading}
-                                className="w-full flex items-center justify-center gap-2 px-6 py-2 mt-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors disabled:opacity-50 shadow-lg hover:shadow-xl"
-                            >
-                                {aiLoading ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        Reviewing...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Wand className="w-5 h-5" />
-                                        Review Code
-                                    </>
-                                )}
-                            </button>
+                            <div className="flex space-x-3">
+                                <button
+                                    onClick={handleRun}
+                                    disabled={isRunning}
+                                    className="flex items-center gap-2 px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors disabled:opacity-50 text-sm font-medium"
+                                >
+                                    {isRunning ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Running...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Play className="w-4 h-4" />
+                                            Run
+                                        </>
+                                    )}
+                                </button>
+                                <button
+                                    onClick={handleAiReview}
+                                    disabled={aiLoading}
+                                    className="flex items-center gap-2 px-4 py-1.5 bg-purple-500 hover:bg-purple-600 text-white rounded-md transition-colors disabled:opacity-50 text-sm font-medium"
+                                >
+                                    {aiLoading ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Reviewing...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Wand className="w-4 h-4" />
+                                            Review
+                                        </>
+                                    )}
+                                </button>
                             </div>
                         </div>
 
-                        {/* Right Column - Input and Output */}
-                        <div className="space-y-1">
-                            <div className='mb-2'>
-                                <h3 className="text-gray-800 text-lg font-roboto font-semibold mt-5 flex items-center gap-2">
-                                    <ArrowRight className="w-5 h-5 text-red-500" />
-                                    Input
-                                </h3>
-                                <textarea
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    placeholder="Enter your input here..."
-                                    className="w-full h-32 px-4 py-2 bg-white border border-red-200 overflow-y-auto rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none shadow-sm"
-                                />
-                            </div>
+                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                            <Editor
+                                height="570px"
+                                language={language}
+                                theme="vs-light"
+                                value={code}
+                                onChange={setCode}
+                                options={{
+                                    minimap: { enabled: false },
+                                    fontSize: 14,
+                                    wordWrap: 'on',
+                                    automaticLayout: true,
+                                    scrollBeyondLastLine: false,
+                                    padding: { top: 16, bottom: 16 },
+                                }}
+                            />
+                        </div>
+                    </div>
 
-                            <div className='mb-5'>
-                                <h3 className="text-gray-800 text-lg font-roboto font-semibold flex items-center gap-2">
-                                    <ArrowDown className="w-5 h-5 text-red-500" />
-                                    Output
-                                </h3>
-                                <div className="w-full h-32 px-4 py-2 bg-white border border-red-200 overflow-y-auto rounded-lg text-gray-800 shadow-sm">
-                                    {output ? (
-                                        <pre className={`whitespace-pre-wrap ${output.error ? 'text-red-500' : 'text-green-600'}`}>
-                                            {output.error ? output.message : 
-                                            output.stderr ? 
-                                            output.output ?
-                                            <>{String(output.output)}<span className='text-red-500'>{output.stderr}</span></> 
-                                            : <span className='text-red-500'>{String(output.stderr)}</span>
-                                            :  String(output.output)}
-                                        </pre>
-                                    ) : (
-                                        <div className="text-gray-400">Run your code to see output</div>
-                                    )}
-                                </div>
+                    {/* Right Column - Input and Output */}
+                    <div className="space-y-4">
+                        <div className="bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-200">
+                            <div className="flex items-center gap-1 mb-1">
+                                <Terminal className="w-5 h-5 text-red-600" />
+                                <h3 className="text-gray-800 font-medium">Input</h3>
                             </div>
+                            <textarea
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Enter your input here..."
+                                className="w-full h-32 px-4 py-2 bg-gray-50 border border-gray-200 overflow-y-auto rounded-md text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"
+                            />
+                        </div>
 
-                            {/* AI Review Section */}
-                            <div>
-                                <h3 className="text-gray-800 text-lg font-roboto font-semibold mt-4 mb-1 flex items-center gap-2">
-                                    <Wand className="w-5 h-5 text-purple-500" />
-                                    AI Review
-                                </h3>
-                                <div className="w-full h-64 px-4 py-3 bg-white border border-red-200 overflow-y-auto rounded-lg text-gray-800 shadow-sm">
-                                    {showAiReview && aiReview ? (
-                                        <div className="">
-                                            <div className="flex justify-between items-start">
-                                                <div className="prose prose-sm max-w-none">
-                                                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{aiReview}</p>
-                                                </div>
-                                                <button
-                                                    onClick={() => setShowAiReview(false)}
-                                                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                                                >
-                                                    <X size={18} />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="text-gray-400">Get AI review of your code</div>
-                                    )}
+                        <div className="bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-200">
+                            <div className="flex items-center gap-1 mb-1">
+                                <ArrowDown className="w-5 h-5 text-red-600" />
+                                <h3 className="text-gray-800 font-medium">Output</h3>
+                            </div>
+                            <div className="w-full h-32 px-4 py-2 bg-gray-50 border border-gray-200 rounded-md overflow-y-auto">
+                                {output ? (
+                                    <pre className={`whitespace-pre-wrap font-mono text-sm ${output.error ? 'text-red-600' : 'text-green-600'}`}>
+                                        {output.error ? output.message : 
+                                        output.stderr ? 
+                                        output.output ?
+                                        <>{String(output.output)}<span className='text-red-600'>{output.stderr}</span></> 
+                                        : <span className='text-red-600'>{String(output.stderr)}</span>
+                                        :  String(output.output)}
+                                    </pre>
+                                ) : (
+                                    <div className="text-gray-400 font-mono text-sm">Run your code to see output</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* AI Review Section */}
+                        <div className="bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-200">
+                            <div className="flex items-center justify-between mb-1">
+                                <div className="flex items-center gap-1">
+                                    <MessageSquare className="w-5 h-5 text-red-600" />
+                                    <h3 className="text-gray-800 font-medium">AI Review</h3>
                                 </div>
+                                {showAiReview && (
+                                    <button
+                                        onClick={() => setShowAiReview(false)}
+                                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                )}
+                            </div>
+                            <div className="w-full h-[221px] px-4 py-2 bg-gray-50 border border-gray-200 rounded-md overflow-y-auto">
+                                {showAiReview && aiReview ? (
+                                    <div className="prose prose-sm max-w-none">
+                                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{aiReview}</p>
+                                    </div>
+                                ) : (
+                                    <div className="text-gray-400 font-mono text-sm">Get AI review of your code</div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     );
 };
 

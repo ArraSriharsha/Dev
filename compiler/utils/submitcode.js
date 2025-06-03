@@ -37,7 +37,6 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         for (let i = 0; i < newproblem.testCaseCount; i++) {
             const testCase = testCases[i];
             const expectedOutput = expectedOutputs[i];
-
             try {
                 // Create temporary input file for this test case
                 const testcasePath = await generateInputFile(rootDir,testCase);
@@ -48,7 +47,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
                     allPassed = false;
                     break;
                 }
-
+                
                 // Compare output with expected output
                 const isCorrect = compareOutputs(result.stdout, expectedOutput);
 

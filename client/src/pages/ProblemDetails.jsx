@@ -446,7 +446,7 @@ const ProblemDetails = () => {
 
                             <div className="flex-1 min-h-0 flex flex-col gap-4">
                                 {/* Editor */}
-                                <div className="flex-1 border border-red-400 rounded overflow-hidden mb-2">
+                                <div className="flex-1 border border-red-400 rounded overflow-hidden">
                                     <Editor
                                         height="100%"
                                         defaultLanguage={selectedLanguage}
@@ -464,22 +464,22 @@ const ProblemDetails = () => {
                                 </div>
 
                                 {/* Input/Output Section */}
-                                <div className="grid grid-cols-2 gap-3 mt-0.5">
+                                <div className="grid grid-cols-2 gap-3 ">
                                     {/* Input Section */}
-                                    <div className="bg-black/30 border border-red-400 rounded-lg p-4">
+                                    <div className="bg-black/30 border border-red-400 rounded-lg p-3">
                                         <h2 className="text-base font-semibold text-gray-200 mb-2">Input</h2>
                                         <textarea
                                             value={input}
                                             onChange={(e) => setInput(e.target.value)}
-                                            className="w-full h-[100px] bg-black/30 border border-red-400 rounded p-2 text-white resize-none"
+                                            className="w-full h-[150px] bg-black/30 border border-red-400 rounded p-2 text-white resize-none"
                                             placeholder="Enter your input here..."
                                         />
                                     </div>
 
                                     {/* Output Section */}
-                                    <div className="bg-black/30 border border-red-400 rounded-lg p-4">
+                                    <div className="bg-black/30 border border-red-400 rounded-lg p-3">
                                         <h2 className="text-base font-semibold text-gray-200 mb-2">Output</h2>
-                                        <div className="h-[100px] bg-black/30 border border-red-400 rounded p-2 overflow-auto">
+                                        <div className="h-[150px] bg-black/30 border border-red-400 rounded p-2 overflow-auto">
                                             {output ? (
                                                 <pre className={`text-base whitespace-pre-wrap ${output.error ? 'text-red-500' : 'text-green-400'}`}>
                                                     {output.error ? String(output.message) : 
