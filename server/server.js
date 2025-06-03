@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const allowedOrigins = process.env.CLIENT_URL.split(',');
+const allowedOrigins = process.env.CLIENT_URL.split(',').map(url => url.trim());
 
 app.use(cors({
   origin: function (origin, callback) {
