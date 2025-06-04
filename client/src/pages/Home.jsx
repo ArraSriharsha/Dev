@@ -302,7 +302,7 @@ const Home = () => {
                                             </div>
                                             <div>
                                                 <div className="text-sm text-red-500/80">Phone</div>
-                                                <div className="font-medium text-red-500">+91 9876543210</div>
+                                                <div className="font-medium text-red-500">+91 8143126615</div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4">
