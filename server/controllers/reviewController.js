@@ -11,7 +11,7 @@ export const getReviewCode = async (req, res) => {
     const response = await genAI.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `
-            review the code.
+            Please review this code for correctness, efficiency, and best practices. First, mention if there is any syntax error or other issue.
             Code:${code}`,
           });
 

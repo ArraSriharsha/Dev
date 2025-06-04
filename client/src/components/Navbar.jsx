@@ -77,8 +77,8 @@ const Navbar = () => {
         <Link to="/compiler" 
         className="block hover:text-red-500 transition-colors py-2"
          onClick={closeMenu}
-          Compiler
         >
+          Compiler
         </Link>
         <Link 
           to="/problems" 

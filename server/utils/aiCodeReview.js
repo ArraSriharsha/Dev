@@ -9,7 +9,7 @@ export const aiCodeReview = async (code) => {
     const response = await genAI.models.generateContent({
         model: "gemini-2.0-flash",
         contents: `
-        review the code.Use clean text.Do not add *'s and make it look messy.Add new lines wherever necessary
+        Please review this code for correctness, efficiency, and best practices. First, mention if there is any syntax error or other issue.
          ${code}
         `,
       });
