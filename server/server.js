@@ -27,8 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const allowedOrigins = [ 
-  'https://www.codearena.tech',  // Production frontend
-  'https://api.codearena.tech'   // Production API
+  'https://www.codearena.tech',
+  'http://codearena.tech',  // Production frontend
+  'https://api.codearena.tech', // Production API 
 ];
 
 app.use(cors({
@@ -49,6 +50,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+app.get('/', (req, res) => {
+  res.status(200).send('CodeArena API is running');
+});
 
 // Routes
 app.use('/', auth); 
