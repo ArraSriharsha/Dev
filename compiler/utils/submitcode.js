@@ -81,7 +81,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         if (!submissionDoc) {
             if (allPassed) {
                 if (aiSubmissionDoc) {
-                    await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 40 });
+                    await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 60 });
                 } else {
                     await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 100 });
                 }
