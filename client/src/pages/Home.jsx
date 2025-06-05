@@ -11,11 +11,14 @@ const Home = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [featuredLoading, setFeaturedLoading] = useState(false);
     // Static featured problems
     useEffect(() => {
         const fetchFeaturedProblems = async () => {
+            setFeaturedLoading(true);
             const response = await getHomeProblems();
             setFeaturedProblems(response.data);
+            setFeaturedLoading(false);
         };
         fetchFeaturedProblems();
         // Test toast
@@ -125,10 +128,14 @@ const Home = () => {
                             View All <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                     </div>
-
-                    <div className="grid md:grid-cols-4 gap-6">
-                        {featuredProblems.map((problem) => (
-                            <Link
+                    {featuredLoading ? (
+                        <div className="flex justify-center items-center">
+                            <Loader2 className="animate-spin w-5 h-5" />
+                        </div>
+                    ) : (
+                        <div className="grid md:grid-cols-4 gap-6">
+                            {featuredProblems.map((problem) => (
+                                <Link
                                 key={problem._id}
                                 to={`/problems/${problem._id}`}
                                 className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
@@ -139,8 +146,9 @@ const Home = () => {
                                 </div>
                                 <p className="text-gray-600 text-sm line-clamp-3">{problem.description}</p>
                             </Link>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
