@@ -177,10 +177,8 @@ npm run dev
 - Hot Module Replacement
 - Modern development features
 
-## 📝 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/ArraSriharsha/Dev/tree/main/LICENSE) file for details.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 👥 Author
-
-Harsha 
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/ArraSriharsha/Dev/tree/main/LICENSE) file for details.
