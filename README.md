@@ -81,6 +81,7 @@ Welcome to CodeArena, an Online Judge Platform, a comprehensive coding practice 
 
 ### Prerequisites
 - Node.js (v14 or higher)
+- GCC,G++,Python3,Openjdk17 or later
 - MongoDB
 - AWS S3 setup
 - Google AI API credentials
@@ -96,6 +97,10 @@ git clone https://github.com/ArraSriharsha/Dev
 ```bash
 # Install server dependencies
 cd server
+npm install
+
+# Install compiler dependencies
+cd ../compiler
 npm install
 
 # Install client dependencies
