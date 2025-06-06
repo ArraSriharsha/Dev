@@ -1,9 +1,9 @@
-# ![logo](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/client/public/logo.svg)  Code Arena | Online Judge
+# ![logo](OJ/client/public/logo.svg)  Code Arena | Online Judge
 
 
 A modern online coding platform that allows users to practice coding problems, submit solutions, and get real-time feedback.
 
-![CodeArena](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/Home.png)
+![CodeArena](OJ/Home.png)
 
 ## 📝 Description
 
@@ -39,7 +39,7 @@ Welcome to CodeArena, an Online Judge Platform, a comprehensive coding practice 
 - **Nodemailer** - Email functionality
 
 ## Blueprint of Logic
-![Blueprint](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/Blueprint.png)
+![Blueprint](OJ/Blueprint.png)
 
 
 ## ✨ Key Features
