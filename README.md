@@ -1,12 +1,13 @@
-# Online Judge Platform
+# ![logo](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/client/public/logo.svg)  Code Arena | Online Judge
+
 
 A modern online coding platform that allows users to practice coding problems, submit solutions, and get real-time feedback.
 
-![CodeArena]()
+![CodeArena](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/Home.png)
 
 ## 📝 Description
 
-Welcome to the Online Judge Platform, a comprehensive coding practice environment designed for developers of all skill levels. This platform combines the power of modern web technologies with advanced AI capabilities to provide an engaging and educational coding experience.
+Welcome to CodeArena, an Online Judge Platform, a comprehensive coding practice environment designed for developers of all skill levels. This platform combines the power of modern web technologies with advanced AI capabilities to provide an engaging and educational coding experience.
 
 ### What Makes This Platform Special?
 
@@ -36,6 +37,10 @@ Welcome to the Online Judge Platform, a comprehensive coding practice environmen
 - **AWS S3** - Cloud storage for file management
 - **Google AI** - AI-powered features
 - **Nodemailer** - Email functionality
+
+## Blueprint of Logic
+![Blueprint](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/Blueprint.png)
+
 
 ## ✨ Key Features
 
