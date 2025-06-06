@@ -186,4 +186,6 @@ npm run dev
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/ArraSriharsha/Dev/tree/main/LICENSE) file for details.
+## 👥 Author
+
+Harsha 
