@@ -90,7 +90,7 @@ const ProblemDetails = () => {
         const newLeftWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
 
         // Limit the width between 30% and 70%
-        if (newLeftWidth >= 30 && newLeftWidth <= 70) {
+        if (newLeftWidth >= 30 && newLeftWidth <= 50) {
             setLeftWidth(newLeftWidth);
         }
     };

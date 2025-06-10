@@ -28,8 +28,8 @@ export const getProblems = async (req, res) => {
         const problems = await Problem.find(query)
             .sort({ [sortBy]: sortOrder })
             .skip((page - 1) * limit)
-            .limit(limit);
-
+            .limit(limit)
+            .select('-testCasesInputKey -testCasesOutputKey -testCaseCount');
         // Get total count for pagination
         const total = await Problem.countDocuments(query);
 
@@ -51,7 +51,7 @@ export const getProblems = async (req, res) => {
 export const getProblemById = async (req, res) => {
     try {
         const { id } = req.params;
-        const problem = await Problem.findById(id);
+        const problem = await Problem.findById(id).select('-testCasesInputKey -testCasesOutputKey -testCaseCount');
         
         if (!problem) {
             return res.status(404).json({ message: 'Problem not found' });
