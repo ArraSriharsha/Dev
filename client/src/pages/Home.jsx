@@ -94,21 +94,21 @@ const Home = () => {
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">Why Choose Code Arena?</h2>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="group bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div className="group border-2 border-red-500 bg-white rounded-xl p-8 hover:shadow-lg hover:shadow-red-500 transition-all duration-300">
                             <div className="bg-red-50 w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-100 transition-colors">
                                 <Code className="w-8 h-8 text-red-500" />
                             </div>
                             <h3 className="text-xl font-semibold mb-4">Diverse Problem Set</h3>
                             <p className="text-gray-600 leading-relaxed">Practice with 1000+ problems across various difficulty levels and categories.</p>
                         </div>
-                        <div className="group bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div className="group border-2 border-red-500 bg-white rounded-xl p-8 hover:shadow-lg hover:shadow-red-500 transition-all duration-300">
                             <div className="bg-red-50 w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-100 transition-colors">
                                 <Trophy className="w-8 h-8 text-red-500" />
                             </div>
                             <h3 className="text-xl font-semibold mb-4">Regular Contests</h3>
                             <p className="text-gray-600 leading-relaxed">Participate in weekly and biweekly contests to test your skills against others.</p>
                         </div>
-                        <div className="group bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div className="group border-2 border-red-500 bg-white rounded-xl p-8 hover:shadow-lg hover:shadow-red-500 transition-all duration-300">
                             <div className="bg-red-50 w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-100 transition-colors">
                                 <Users className="w-8 h-8 text-red-500" />
                             </div>
@@ -124,7 +124,7 @@ const Home = () => {
                 <div className="container mx-auto px-4">
                     <div className="flex justify-between items-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold">Featured Problems</h2>
-                        <Link to="/problems" className="flex items-center text-red-500 hover:text-red-600 transition-colors">
+                        <Link to="/problems" className="flex items-center text-red-500 hover:text-red-600 transition-colors underline">
                             View All <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                     </div>
@@ -138,8 +138,8 @@ const Home = () => {
                                 <Link
                                 key={problem._id}
                                 to={`/problems/${problem._id}`}
-                                className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
-                            >
+                                    className="group border-2 border-red-500 bg-white rounded-xl p-6 transition-all duration-300 hover:scale-105"
+                                >
                                 <div className="flex justify-between items-start mb-4">
                                     <h3 className="font-semibold text-lg group-hover:text-red-500 transition-colors">{problem.title}</h3>
                                     <DifficultyBadge difficulty={problem.difficulty} />

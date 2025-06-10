@@ -29,7 +29,8 @@ app.use(cookieParser());
 const allowedOrigins = [ 
   'https://www.codearena.tech',
   'http://codearena.tech',  // Production frontend
-  'https://api.codearena.tech', // Production API 
+  'https://api.codearena.tech', // Production API
+  'http://localhost:5173', // Development frontend
 ];
 
 app.use(cors({
