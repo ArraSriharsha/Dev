@@ -4,11 +4,9 @@ import path from 'path';
 export const cleanupTempFiles = async (rootDir) => {
     try {
         if (fs.existsSync(rootDir)) {
-            const files = await fs.readdirSync(rootDir);
-            await Promise.all(files.map(file => fs.unlinkSync(path.join(rootDir, file))));
-            await fs.rmdirSync(rootDir);
+            // Use rmSync with recursive option to remove directory and all its contents
+            fs.rmSync(rootDir, { recursive: true, force: true });
         }
-   
     } catch (error) {
         console.error('Error cleaning up temporary files:', error);
     }

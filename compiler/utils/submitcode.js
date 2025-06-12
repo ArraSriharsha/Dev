@@ -1,9 +1,7 @@
-import fs from 'fs';
-import path from 'path';
+
 import problem from '../models/Problems.js';
 import submission from '../models/Submissions.js';
 import { executeCode, generateFile, generateInputFile } from '../utils/runcode.js';
-import { cleanupTempFiles } from '../utils/cleanup.js';
 import { getTestCasesFromS3, compareOutputs } from './testcasehandler.js';
 
 
@@ -23,7 +21,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         let allPassed = true;
 
         // Create a temporary file for user's code
-        const filepath = await generateFile(rootDir,language, userCode);
+        const filepath = await generateFile(rootDir, language, userCode);
 
         // Get test cases from S3
         const { testCases, expectedOutputs } = await getTestCasesFromS3(
@@ -32,6 +30,7 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         );
 
         let count = 0;
+        let maxRuntime = 0;
 
         // Run each test case
         for (let i = 0; i < newproblem.testCaseCount; i++) {
@@ -39,13 +38,29 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
             const expectedOutput = expectedOutputs[i];
             try {
                 // Create temporary input file for this test case
-                const testcasePath = await generateInputFile(rootDir,testCase);
+                const testcasePath = await generateInputFile(rootDir, testCase);
                 // Execute the code with the test case
-                const result = await executeCode(rootDir,filepath, language, testcasePath);
+                const result = await executeCode(rootDir, filepath, language, testcasePath, true);
+
+                // Update max runtime
+                if (result.runtime) {
+                    const runtimeMs = parseFloat(result.runtime.replace('ms', ''));
+                    if (!isNaN(runtimeMs)) {
+                        maxRuntime = Math.max(maxRuntime, runtimeMs);
+                    }
+                }
 
                 if (result.error) {
                     allPassed = false;
-                    break;
+                    await submission.findByIdAndUpdate(submissionId, { 
+                        status: 'WA', 
+                        score: -25,
+                        runtime: `${maxRuntime.toFixed(2)}ms`,
+                        testCasesPassed: count
+                    });
+                    return {
+                        error: result.error,
+                    };
                 }
                 
                 // Compare output with expected output
@@ -53,6 +68,12 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
 
                 if (!isCorrect) {
                     allPassed = false;
+                    await submission.findByIdAndUpdate(submissionId, { 
+                        status: 'WA', 
+                        score: -25,
+                        runtime: `${maxRuntime.toFixed(2)}ms`,
+                        testCasesPassed: count
+                    });
                     break;
                 }
                 count++;
@@ -81,23 +102,46 @@ export const evaluateSubmission = async (problemId, userCode, language, submissi
         if (!submissionDoc) {
             if (allPassed) {
                 if (aiSubmissionDoc) {
-                    await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 60 });
+                    await submission.findByIdAndUpdate(submissionId, { 
+                        status: 'AC', 
+                        score: 60,
+                        runtime: `${maxRuntime.toFixed(2)}ms`,
+                        testCasesPassed: count
+                    });
                 } else {
-                    await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 100 });
+                    await submission.findByIdAndUpdate(submissionId, { 
+                        status: 'AC', 
+                        score: 100,
+                        runtime: `${maxRuntime.toFixed(2)}ms`,
+                        testCasesPassed: count
+                    });
                 }
             } else {
-                await submission.findByIdAndUpdate(submissionId, { status: 'WA', score: -25 });
+                await submission.findByIdAndUpdate(submissionId, { 
+                    status: 'WA', 
+                    score: -25,
+                    runtime: `${maxRuntime.toFixed(2)}ms`,
+                    testCasesPassed: count
+                });
             }
         } else {
             // Already accepted once before, award 0 points
             if (allPassed) {
-                await submission.findByIdAndUpdate(submissionId, { status: 'AC', score: 0 });
+                await submission.findByIdAndUpdate(submissionId, { 
+                    status: 'AC', 
+                    score: 0,
+                    runtime: `${maxRuntime.toFixed(2)}ms`,
+                    testCasesPassed: count
+                });
             } else {
-                await submission.findByIdAndUpdate(submissionId, { status: 'WA', score: -25 });
+                await submission.findByIdAndUpdate(submissionId, { 
+                    status: 'WA', 
+                    score: -25,
+                    runtime: `${maxRuntime.toFixed(2)}ms`,
+                    testCasesPassed: count
+                });
             }
         }
-
-        await cleanupTempFiles(rootDir);
 
         return {
             allPassed,

@@ -6,8 +6,9 @@ RUN apk update && apk add --no-cache gcc g++ make python3 openjdk17
 
 COPY . .
 
+RUN npm install -g pm2
 RUN npm install
 
 EXPOSE 3000
 
-CMD ["node", "index.js"]
+CMD ["pm2-runtime", "startAll.js"]

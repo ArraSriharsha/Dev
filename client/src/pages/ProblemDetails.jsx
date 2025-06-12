@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { getProblemById, runCode, getAiReview } from '../services/api';
-import { Play, Send, Loader2, ChevronLeft, ChevronRight, X, Sparkles } from 'lucide-react';
+import { getProblemById, runCode, getAiReview, submitCode, getSubmissionStatus, getSubmissionsByProblemByUser } from '../services/api';
+import { Play, Send, Loader2, ChevronLeft, ChevronRight, X, Sparkles, FileText, History } from 'lucide-react';
 import Editor from '@monaco-editor/react';
-import { submitCode } from '../services/api';
+import ReactMarkdown from 'react-markdown';
+import SubmissionsSlider from '../components/SubmissionsSlider';
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProblemDetails = () => {
     const navigate = useNavigate();
@@ -28,6 +31,7 @@ const ProblemDetails = () => {
     const [showAiReview, setShowAiReview] = useState(false);
     const [aiToastMessage, setAiToastMessage] = useState(null);
     const [aiLoading, setAiLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState('problem'); // 'problem' or 'submissions'
     const languageOptions = [
         { value: 'c', label: 'C' },
         { value: 'cpp', label: 'C++' },
@@ -35,6 +39,9 @@ const ProblemDetails = () => {
         { value: 'js', label: 'JavaScript' },
         { value: 'py', label: 'Python' },
     ];
+    const POLL_INTERVAL = 3000; // 3 seconds
+    const [submissions, setSubmissions] = useState([]);
+    const [submissionsLoading, setSubmissionsLoading] = useState(true);
 
     useEffect(() => {
         const fetchProblem = async () => {
@@ -65,16 +72,7 @@ const ProblemDetails = () => {
         };
     }, []);
 
-    const showToastMessage = (message) => {
-        setSubmitOutput(message);
-        setShowToast(true);
-        if (toastTimeoutRef.current) {
-            clearTimeout(toastTimeoutRef.current);
-        }
-        toastTimeoutRef.current = setTimeout(() => {
-            setShowToast(false);
-        }, 3000);
-    };
+    
 
     const handleMouseDown = (e) => {  // on down,is basically a hold event and onUp is the release event
         // here the event is the mouse down event hence it prevents the default behavior of the event(in this case, the default behavior is to select the text)
@@ -167,29 +165,51 @@ const ProblemDetails = () => {
                 code,
                 language: selectedLanguage,
             });
-            if(response.data.error){
-                showToastMessage({
-                    error: true,
-                    message: response.data.error
-                });
+
+            if (response.data.error) {
+                toast.error(response.data.error);
+                setIsSubmitting(false);
+                return;
             }
-            else if(response.data.allPassed){
-                showToastMessage({
-                    error: false,
-                    message: `Accepted ${response.data.totalTestCasesPassed} / ${response.data.totalTestCases} Testcases Passed`
-                });
+
+            toast.success('Submission Queued Successfully');
+
+            // Poll for status if we have a submissionId
+            const submissionId = response.data.submissionId;
+            if (submissionId) {
+                let polling = true;
+                while (polling) {
+                    await new Promise(res => setTimeout(res, POLL_INTERVAL));
+                    try {
+                        const statusRes = await getSubmissionStatus(submissionId);
+                        const { status, error: subError } = statusRes.data;
+                        fetchSubmissions();
+                        if (status !== 'In Queue' && status !== 'Processing') {
+                            if(status === 'AC'){
+                                toast.success(`${status} ${statusRes.data.testCasesPassed}/${statusRes.data.totalTestCases} Test Cases Passed`);
+                            }else if(subError){
+                                if(subError.includes('Time Limit Exceeded')){
+                                    toast.error('Time Limit Exceeded');
+                                }else if(subError.includes('Output Buffer Limit Exceeded')){
+                                    toast.error('Output Buffer Limit Exceeded');
+                                }else if(subError.includes('Runtime Error')){
+                                    toast.error('Runtime Error');
+                                }else{
+                                    toast.error('Compilation Error');
+                                }
+                            }else{
+                                toast.error(`${status} ${statusRes.data.testCasesPassed}/${statusRes.data.totalTestCases} Test Cases Passed`);
+                            }
+                            polling = false;
+                        }
+                    } catch (pollError) {
+                        toast.error('Polling error, retrying...');
+                    }
+                }
             }
-            else{
-                showToastMessage({
-                    error: false,
-                    message: `Wrong Answer ${response.data.totalTestCasesPassed} / ${response.data.totalTestCases} Testcases Passed`
-                });
-            }
+
         } catch (error) {
-            showToastMessage({
-                error: true,
-                message: error.response?.data?.error || error.response?.data?.message || 'Failed to submit code'
-            });
+            toast.error(error.response?.data?.error || error.response?.data?.message || 'Failed to submit code');
         } finally {
             setIsSubmitting(false);
         }
@@ -209,15 +229,29 @@ const ProblemDetails = () => {
             setShowAiReview(true);
         } catch (error) {
             setAiReview(null);
-            setShowToast(true);
-            setAiToastMessage({
-                error: true,
-                message: error.response?.data?.error || error.response?.data?.message || 'Failed to get AI review'
-            });
+            toast.error(error.response?.data?.error || error.response?.data?.message || 'Failed to get AI review');
         } finally {
             setAiLoading(false);
         }
     };
+
+    const fetchSubmissions = async () => {
+        setSubmissionsLoading(true);
+        try {
+            if (!problem?.title) return;
+            const response = await getSubmissionsByProblemByUser(problem.title);
+            const sorted = response.data.sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate));
+            setSubmissions(sorted);
+        } catch (e) {
+            // Optionally handle error
+        } finally {
+            setSubmissionsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (problem?.title) fetchSubmissions();
+    }, [problem?.title]);
 
     if (error) {
         return (
@@ -286,19 +320,33 @@ const ProblemDetails = () => {
             {showAiReview && aiReview && (
                 <div className="fixed inset-0 bg-black/50 flex overflow-y-auto justify-center z-50">
                     <div className="bg-black border border-red-500 overflow-y-auto rounded-lg z-50 p-6 max-w-2xl w-full mx-4 my-10 relative">
-                        <h2 className="text-xl font-semibold mb-4 text-red-500">AI Review</h2>
-                        <div className="prose prose-invert max-w-none">
-                            <p className="text-gray-300 whitespace-pre-wrap">{aiReview}</p>
+                        <div className="prose prose-invert max-w-none overflow-x-hidden">
+                            <ReactMarkdown
+                                components={{
+                                    p: ({node, ...props}) => <p className="text-white break-words mb-6" {...props} />,
+                                    h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-red-600 break-words mb-8" {...props} />,
+                                    h2: ({node, ...props}) => <h2 className="text-2xl font-bold text-red-500 break-words mb-6" {...props} />,
+                                    h3: ({node, ...props}) => <h3 className="text-xl font-bold text-red-400 break-words mb-4" {...props} />,
+                                    ul: ({node, ...props}) => <ul className="list-disc list-inside text-white break-words mb-6" {...props} />,
+                                    ol: ({node, ...props}) => <ol className="list-decimal list-inside text-white break-words mb-6" {...props} />,
+                                    li: ({node, ...props}) => <li className="break-words text-white mb-2" {...props} />,
+                                    code: ({node, inline, ...props}) => <code className="text-red-200 break-words whitespace-pre-wrap mb-6" {...props} />,
+                                    pre: ({node, ...props}) => <pre className="text-red-200 break-words whitespace-pre-wrap mb-6" {...props} />,
+                                    strong: ({node, ...props}) => <strong className="font-bold text-white break-words" {...props} />,
+                                    em: ({node, ...props}) => <em className="italic text-white break-words" {...props} />
+                                }}
+                            >
+                                {aiReview}
+                            </ReactMarkdown>
                         </div>
                     </div>
                     <button 
-                            onClick={() => setShowAiReview(false)}
-                            className="absolute top-4 right-4 hover:border-2 hover:border-red-500 bg-white mr-80 text-red-500 rounded-full p-1 transition-colors"
-                        >
-                            <X size={20} />
-                        </button>
+                        onClick={() => setShowAiReview(false)}
+                        className="absolute top-4 right-4 hover:border-2 hover:border-red-500 bg-white mr-80 text-red-500 rounded-full p-1 transition-colors"
+                    >
+                        <X size={20} />
+                    </button>
                 </div>
-                
             )}
             <div  className="container mx-auto px-1 py-6 h-[calc(100vh-4rem)]">
                 <div
@@ -308,59 +356,95 @@ const ProblemDetails = () => {
                 >
                     {/* Problem Description */}
                     <div className="border border-red-600 rounded-lg overflow-auto h-full">
-                        
-                            <div className="bg-black/50 border border-red-500 rounded-lg p-4  ">
-                                <div className="flex items-center justify-between mb-4">
-                                    <h1 className="text-xl font-semibold text-gray-200">{problem?.title}</h1>
-                                    <span className={`px-3 py-1 rounded-full text-sm ${problem?.difficulty === 'Easy' ? 'bg-green-500/20 text-green-500' :
-                                            problem?.difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-500' :
-                                                'bg-red-500/20 text-red-500'
-                                        }`}>
-                                        {problem?.difficulty}
-                                    </span>
-                                </div>
-
-                                <div className="prose prose-invert max-w-none text-sm">
-                                    <div className="mb-4">
-                                        <p className="text-gray-300 whitespace-pre-wrap">{problem?.description}</p>
-                                    </div>
-
-                                    <div className="mb-4">
-                                        <h2 className="text-base font-semibold text-gray-200 mb-2">Examples:</h2>
-                                        {problem?.examples?.map((example, index) => (
-                                            <div key={index} className="mb-3 p-3 bg-black/30 rounded border border-red-400">
-                                                <div className="mb-2">
-                                                    <span className="font-medium text-gray-200">Example {index + 1}:</span>
-                                                    <div className="mt-2">
-                                                        <span className="font-medium text-gray-200">Input:</span>
-                                                        <pre className="mt-1 p-2 bg-black/50 rounded text-sm whitespace-pre-wrap">{example.input}</pre>
-                                                    </div>
-                                                    <div className="mt-2">
-                                                        <span className="font-medium text-gray-200">Output:</span>
-                                                        <pre className="mt-1 p-2 bg-black/50 rounded text-sm whitespace-pre-wrap">{example.output}</pre>
-                                                    </div>
-                                                    {example.explanation && (
-                                                        <div className="mt-2">
-                                                            <span className="font-medium text-gray-200">Explanation:</span>
-                                                            <p className="mt-1 text-gray-300 text-sm">{example.explanation}</p>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="mb-4">
-                                        <h2 className="text-base font-semibold text-gray-200 mb-2">Constraints:</h2>
-                                        <ul className="list-disc list-inside space-y-1 text-sm">
-                                            {problem?.constraints?.map((constraint, index) => (
-                                                <li key={index} className="text-gray-300">{constraint}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
+                        <div className="bg-black/50 border border-red-500 rounded-lg overflow-auto h-full">
+                            {/* Tab Navigation */}
+                            <div className="flex border-b border-red-500">
+                                <button
+                                    onClick={() => setActiveTab('problem')}
+                                    className={`flex-1 py-3 px-4 text-lg font-medium flex items-center justify-center gap-2 transition-colors ${
+                                        activeTab === 'problem'
+                                            ? 'text-white border-b-2 border-red-500 rounded-t-lg'
+                                            : 'text-gray-400 hover:text-gray-300'
+                                    }`}
+                                >
+                                    <FileText size={20} />
+                                    Problem
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('submissions')}
+                                    className={`flex-1 py-3 px-4 text-lg font-medium flex items-center justify-center gap-2 transition-colors ${
+                                        activeTab === 'submissions'
+                                            ? 'text-white border-b-2 border-red-500 rounded-t-lg'
+                                            : 'text-gray-400 hover:text-gray-300'
+                                    }`}
+                                >
+                                    <History size={20} />
+                                    Submissions
+                                </button>
                             </div>
-                        
+
+                            {/* Tab Content */}
+                            <div className="p-4">
+                                {activeTab === 'problem' ? (
+                                    <>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h1 className="text-xl font-semibold text-gray-200">{problem?.title}</h1>
+                                            <span className={`px-3 py-1 rounded-full text-sm ${problem?.difficulty === 'Easy' ? 'bg-green-500/20 text-green-500' :
+                                                    problem?.difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-500' :
+                                                        'bg-red-500/20 text-red-500'
+                                                }`}>
+                                                {problem?.difficulty}
+                                            </span>
+                                        </div>
+
+                                        <div className="prose prose-invert max-w-none text-sm">
+                                            <div className="mb-4">
+                                                <p className="text-gray-300 whitespace-pre-wrap">{problem?.description}</p>
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <h2 className="text-base font-semibold text-gray-200 mb-2">Examples:</h2>
+                                                {problem?.examples?.map((example, index) => (
+                                                    <div key={index} className="mb-3 p-3 bg-black/30 rounded border border-red-400">
+                                                        <div className="mb-2">
+                                                            <span className="font-medium text-gray-200">Example {index + 1}:</span>
+                                                            <div className="mt-2">
+                                                                <span className="font-medium text-gray-200">Input:</span>
+                                                                <pre className="mt-1 p-2 bg-black/50 rounded text-sm whitespace-pre-wrap">{example.input}</pre>
+                                                            </div>
+                                                            <div className="mt-2">
+                                                                <span className="font-medium text-gray-200">Output:</span>
+                                                                <pre className="mt-1 p-2 bg-black/50 rounded text-sm whitespace-pre-wrap">{example.output}</pre>
+                                                            </div>
+                                                            {example.explanation && (
+                                                                <div className="mt-2">
+                                                                    <span className="font-medium text-gray-200">Explanation:</span>
+                                                                    <p className="mt-1 text-gray-300 text-sm">{example.explanation}</p>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <h2 className="text-base font-semibold text-gray-200 mb-2">Constraints:</h2>
+                                                <ul className="list-disc list-inside space-y-1 text-sm">
+                                                    {problem?.constraints?.map((constraint, index) => (
+                                                        <li key={index} className="text-gray-300">{constraint}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="h-full flex flex-col">
+                                        <h2 className="text-xl font-semibold text-gray-200 mb-4">Submissions</h2>
+                                        <SubmissionsSlider submissions={submissions} isLoading={submissionsLoading} problemTitle={problem?.title} />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Resizer */}

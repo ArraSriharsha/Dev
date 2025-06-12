@@ -23,6 +23,10 @@ export const getProblems = async (params = {}) => {
   const response = await api.get('/problems', { params });
   return response;
 };
+export const getSubmissionsByProblemByUser = async (problemTitle) => {
+  const response = await api.get(`/submissions/problem/${problemTitle}`);
+  return response;
+};
 export const getHomeProblems = async () => {
   const response = await api.get('/homeproblem');
   return response;
@@ -135,5 +139,10 @@ export const sendOTP = async (data) => {
 };
 export const resetPassword = async (data) => {
   const response = await api.post('/password/reset', data);
+  return response;
+};
+
+export const getSubmissionStatus = async (submissionId) => {
+  const response = await api.get(`/submissions/status/${submissionId}`);
   return response;
 };

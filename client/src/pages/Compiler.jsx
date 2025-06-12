@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Editor from '@monaco-editor/react';
 import Navbar from '../components/Navbar';
 import { runCodeCompiler, getReviewCode } from '../services/api';
+import ReactMarkdown from 'react-markdown';
 
 const Compiler = () => {
     const [code, setCode] = useState('');
@@ -209,7 +210,23 @@ const Compiler = () => {
                             <div className="w-full h-[221px] px-4 py-2 bg-gray-50 border border-gray-200 rounded-md overflow-y-auto">
                                 {showAiReview && aiReview ? (
                                     <div className="prose prose-sm max-w-none">
-                                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{aiReview}</p>
+                                        <ReactMarkdown
+                                            components={{
+                                                p: ({node, ...props}) => <p className="text-gray-700 whitespace-pre-wrap leading-relaxed" {...props} />,
+                                                h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-red-600 break-words mb-4" {...props} />,
+                                                h2: ({node, ...props}) => <h2 className="text-xl font-bold text-red-500 break-words mb-3" {...props} />,
+                                                h3: ({node, ...props}) => <h3 className="text-lg font-bold text-red-400 break-words mb-2" {...props} />,
+                                                ul: ({node, ...props}) => <ul className="list-disc list-inside text-gray-700 break-words mb-3" {...props} />,
+                                                ol: ({node, ...props}) => <ol className="list-decimal list-inside text-gray-700 break-words mb-3" {...props} />,
+                                                li: ({node, ...props}) => <li className="break-words text-gray-700 mb-1" {...props} />,
+                                                code: ({node, inline, ...props}) => <code className="text-red-500 break-words whitespace-pre-wrap" {...props} />,
+                                                pre: ({node, ...props}) => <pre className="text-red-500 break-words whitespace-pre-wrap" {...props} />,
+                                                strong: ({node, ...props}) => <strong className="font-bold text-gray-800 break-words" {...props} />,
+                                                em: ({node, ...props}) => <em className="italic text-gray-700 break-words" {...props} />
+                                            }}
+                                        >
+                                            {aiReview}
+                                        </ReactMarkdown>
                                     </div>
                                 ) : (
                                     <div className="text-gray-400 font-mono text-sm">Get AI review of your code</div>

@@ -9,6 +9,10 @@ const submissionSchema = new mongoose.Schema({
     language: {type: String, required: false},
     code: {type: String, required: false},
     aiflag: {type: Boolean, required: false, default: false},
+    runtime: {type: String, required: false, default: '0.00ms'},
+    testCasesPassed: {type: Number, required: false, default: 0},
+    totalTestCases: {type: Number, required: false, default: 0},
+    error : {type: String, required: false, default: ''}
 });
 
 const submission = mongoose.model('submission', submissionSchema);
