@@ -69,7 +69,7 @@ const SubmissionsSlider = ({ submissions, isLoading, problemTitle }) => {
     return (
         <div className="pr-2 space-y-4 relative">
             {/* Submission List */}
-            {submissions.map((submission, index) => {
+            {submissions.map((submission, index) => { if(submission.status!="pending"){
                 const status = statusLabels[submission.status] || submission.status;
                 const statusClass = statusStyles[submission.status] || '';
                 const statusIcon = statusIcons[submission.status] || null;
@@ -123,7 +123,7 @@ const SubmissionsSlider = ({ submissions, isLoading, problemTitle }) => {
                         )}
                     </div>
                 );
-            })}
+            }})}
 
             {/* Code View Panel - Right Side */}
             {selectedSubmission && (
