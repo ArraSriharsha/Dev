@@ -139,7 +139,7 @@ export const checkauth = async (req, res) => {
     try {
         const token = req.cookies.token;
         if(!token) {
-            return res.status(401).json({message: "No Token Found"});
+            return res.status(200).json({message: "No Token Found"});
         }
         else{
             return res.status(200).json({message: "Token Found"});
