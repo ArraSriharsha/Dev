@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { Eye, EyeOff, Code } from 'lucide-react'
-import { sendOTP, resetPassword } from '../services/api'
+import { sendOTP, resetPassword, verifyOTP } from '../services/api'
 import { toast } from 'react-toastify'
 
 const Forgot = () => {
@@ -23,13 +23,12 @@ const Forgot = () => {
     }
 
     const handleSendOTP = async (e) => {
-        e.preventDefault() // ** important prevent default to avoid form submission
+        e.preventDefault()
         setIsLoading(true)
         try {
             const response = await sendOTP(formData)
             if (response.status === 200) {
                 toast.success('OTP sent successfully!')
-                setOtp(response.data.otp)
                 setOtpSent(true)
             }
         } catch (error) {
@@ -43,14 +42,16 @@ const Forgot = () => {
         e.preventDefault()
         setIsLoading(true)
         try {
-            if(formData.otp == otp){
+            const response = await verifyOTP({
+                email: formData.email,
+                otp: formData.otp
+            });
+            if (response.status === 200) {
                 toast.success('OTP verified successfully!')
                 setVerified(true)
-            } else {
-                toast.error('Invalid OTP')
             }
         } catch (error) {
-            toast.error('Failed to verify OTP')
+            toast.error(error.response?.data?.message || 'Failed to verify OTP')
         } finally {
             setIsLoading(false)
         }

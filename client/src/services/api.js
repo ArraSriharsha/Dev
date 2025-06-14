@@ -138,9 +138,14 @@ export const sendMessage = async (data) => {
 
 export const sendOTP = async (data) => {
   const response = await api.post('/password/forgot', data);
-  console.log(response)
   return response;
 };
+
+export const verifyOTP = async (data) => {
+  const response = await api.post('/password/verify', data);
+  return response;
+};
+
 export const resetPassword = async (data) => {
   const response = await api.post('/password/reset', data);
   return response;
