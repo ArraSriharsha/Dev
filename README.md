@@ -1,9 +1,9 @@
-# ![logo](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/client/public/logo.svg)  Code Arena | Online Judge
+# ![logo](https://github.com/ArraSriharsha/Dev/blob/main/client/public/logo.svg)  Code Arena | Online Judge
 
 
 A modern online coding platform that allows users to practice coding problems, submit solutions, and get real-time feedback.
 
-![CodeArena](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/Home.png)
+![CodeArena](https://github.com/ArraSriharsha/Dev/blob/main/Home.png)
 
 ## 📝 Description
 
@@ -37,9 +37,11 @@ Welcome to CodeArena, an Online Judge Platform, a comprehensive coding practice 
 - **AWS S3** - Cloud storage for file management
 - **Google AI** - AI-powered features
 - **Nodemailer** - Email functionality
+- **BullMQ** - Redis-based queue for job processing
+- **Redis** - In-memory data store for queue management
 
 ## Blueprint of Logic
-![Blueprint](https://raw.githubusercontent.com/ArraSriharsha/Dev/main/Blueprint.png)
+![Blueprint](https://github.com/ArraSriharsha/Dev/blob/main/Blueprint.png)
 
 
 ## ✨ Key Features
@@ -53,6 +55,8 @@ Welcome to CodeArena, an Online Judge Platform, a comprehensive coding practice 
    - Real-time code compilation and execution
    - Support for multiple programming languages
    - Secure code execution environment
+   - Distributed job processing with BullMQ
+   - Automatic timeout handling for infinite loops
 
 3. **Problem Management**
    - Create and manage coding problems
@@ -69,6 +73,13 @@ Welcome to CodeArena, an Online Judge Platform, a comprehensive coding practice 
    - Intelligent code analysis
    - Automated feedback
 
+6. **Queue Management**
+   - Distributed job processing with BullMQ
+   - Real-time job status tracking
+   - Automatic retry mechanism for failed jobs
+   - Job prioritization and scheduling
+   - Efficient resource utilization
+
 ## 🔒 Security Features
 
 - JWT-based authentication for secure user sessions
@@ -83,6 +94,7 @@ Welcome to CodeArena, an Online Judge Platform, a comprehensive coding practice 
 - Node.js (v14 or higher)
 - GCC,G++,Python3,Openjdk17 or later
 - MongoDB
+- Redis (for BullMQ)
 - AWS S3 setup
 - Google AI API credentials
 
@@ -134,6 +146,7 @@ VITE_API_URL=your_server_url
 PORT=your_compiler_port
 SERVER_URL=your_server_url
 MONGODB_URI=your_mondodb_uri
+REDIS_URL=your_redis_url
 AWS_ACCESS_KEY_ID=your_access_id
 AWS_SECRET_ACCESS_KEY=your_access_key
 AWS_REGION=your_aws_region
@@ -181,6 +194,16 @@ npm run dev
 - Optimized build process
 - Hot Module Replacement
 - Modern development features
+
+### BullMQ + Redis
+- Distributed job processing
+- Real-time job status updates
+- Automatic retry mechanism
+- Job prioritization
+- Efficient resource utilization
+- Scalable architecture
+- Reliable job execution
+- Built-in monitoring and metrics
 
 ## License
 
