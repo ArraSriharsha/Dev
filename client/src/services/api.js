@@ -155,3 +155,8 @@ export const getSubmissionStatus = async (submissionId) => {
   const response = await api.get(`/submissions/status/${submissionId}`);
   return response;
 };
+
+export const authCheck = async () => {
+  const response = await api.get('/checkauth');
+  return response;
+};
