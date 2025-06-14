@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getHomeProblems, sendMessage } from '../services/api'
+import { getHomeProblems, sendMessage, authCheck } from '../services/api'
 import Layout from '../components/Layout'
 import { ArrowRight, Trophy, Users, Code, Loader, Loader2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -58,7 +58,21 @@ const Home = () => {
             setIsLoading(false);
         }
     }
-
+    const handleGetStarted = async () => {
+        try{
+            const response = await authCheck();
+            if(response.data.message === "Token Found"){
+                toast.success('You\'ve already Signed In!')
+                navigate('/');
+                }
+            else{
+                navigate('/signin');
+            }
+        } catch (error) {
+            console.error('Error checking auth:', error);
+            toast.error('Error checking auth');
+        }
+    }
     return (
         <Layout>
             {/* Info Section */}
@@ -74,7 +88,7 @@ const Home = () => {
                     </p>
                     <div className="flex flex-wrap justify-center gap-6">
                         <button 
-                            onClick={() => navigate('/signin')}
+                            onClick={() => handleGetStarted()}
                             className="bg-red-500 text-white px-8 py-3 rounded-lg hover:bg-red-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
                             Get Started

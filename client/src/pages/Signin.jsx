@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { signin, authCheck } from '../services/api'
+import { useState } from 'react'
+import { signin } from '../services/api'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Code, Eye, EyeOff } from 'lucide-react'
@@ -66,15 +66,6 @@ export const Signin = () => {
             setIsLoading(false);
         }
     };
-    useEffect(() => {
-        const checkAuth = async () => {
-            const response = await authCheck();
-            if(response.data.message === "Token Found"){
-                navigate('/');
-            }
-        }
-        checkAuth();
-    }, []);
     
     return (
 
