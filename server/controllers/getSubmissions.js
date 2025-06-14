@@ -20,7 +20,7 @@ export const allSubmissions = async (req, res) => {
                 // if(!token) {
                 //     return res.status(401).json({message: "No token found"});
                 // }    
-        const submissions = await submission.find();
+        const submissions = await submission.find().select('-code -language');
         res.status(200).json(submissions);
     } catch (error) {
         res.status(500).json({ message: error.message });

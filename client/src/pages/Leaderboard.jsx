@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Trophy, TrendingUp, Star, Crown, ChevronUp, ChevronDown, Flame, Target } from 'lucide-react';
-import { getUsers, getProfile, getAllSubmissions } from '../services/api';
+import { getLeaderboardUsers, getProfile, getAllSubmissions } from '../services/api';
 import { toast } from 'react-toastify';
 
 const Leaderboard = () => {
@@ -23,7 +23,7 @@ const Leaderboard = () => {
             try {
                 setLoading(true);
                 const [usersResponse, profileResponse, submissionsResponse] = await Promise.all([
-                    getUsers(),
+                    getLeaderboardUsers(),
                     getProfile(),
                     getAllSubmissions()
                 ]);

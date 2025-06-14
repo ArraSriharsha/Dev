@@ -111,6 +111,10 @@ export const getUsers = async () => {
   const response = await api.get('/users');
   return response;
 };
+export const getLeaderboardUsers = async () => {
+  const response = await api.get('/users/leaderboard');
+  return response;
+};
 
 export const createUser = async (userData) => {
   const response = await api.post('/users', userData);

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, updateUser, deleteUser, createUser } from '../controllers/usersController.js';
+import { getUsers, updateUser, deleteUser, createUser, getLeaderboardUsers } from '../controllers/usersController.js';
 import { protect } from '../middleware/middleauth.js';
 
 const router = express.Router();
@@ -10,6 +10,7 @@ const router = express.Router();
 // Get all users
 router.get('/', getUsers);
 
+router.get('/leaderboard', getLeaderboardUsers);
 // Create a new user
 router.post('/', protect, createUser);
 

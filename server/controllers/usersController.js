@@ -31,8 +31,20 @@ export const getUsers = async (req, res) => {
         });
     }
 };
-
-
+export const getLeaderboardUsers = async (req, res) => {
+    try {
+        const users = await user.find().select('-FirstName -LastName -Email -PhoneNumber -Password');
+        res.status(200).json({
+            success: true,
+            users
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error fetching leaderboard users'
+        });
+    }
+};
 export const createUser = async (req, res) => {
     try {
         const {FirstName, LastName, Email, Username, Password, PhoneNumber,Role} = req.body;
