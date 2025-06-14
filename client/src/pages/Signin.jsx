@@ -4,6 +4,7 @@ import { signin } from '../services/api'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Code, Eye, EyeOff } from 'lucide-react'
+import Cookies from 'js-cookie';
 
 export const Signin = () => {
     const navigate = useNavigate()
@@ -68,6 +69,11 @@ export const Signin = () => {
     };
     
     return (
+        <>
+        {Cookies.get('token') ? (
+            toast.success('You\'ve already Signed In!'),
+            navigate('/')
+        ) : (
         <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-white to-red-300">
             <div className="absolute inset-0 bg-[url('/front.svg')] bg-cover bg-center opacity-50"></div>
             <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-red-100/50"></div>
@@ -205,5 +211,7 @@ export const Signin = () => {
                 </div>
             </div>
         </div>
+        )}
+        </>
     );
 };
