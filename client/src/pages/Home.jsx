@@ -134,8 +134,8 @@ const Home = () => {
 
                                 {/* Code Content */}
                                 <div className="p-4 font-mono text-sm h-[200px] overflow-y-auto">
-                                    <pre className="text-gray-300">
-                                        <code>{`#include <iostream>
+                                    <pre className="text-gray-300 text-left">
+                                        <code className="block text-left">{`#include <iostream>
 using namespace std;
 
 int main() {
@@ -148,15 +148,15 @@ int main() {
 
                                 {/* Output Display */}
                                 <div className="border-t border-gray-700">
-                                    <div className="px-4 py-2 bg-gray-800 flex items-center justify-between">
+                                    <div className="px-4 py-2 bg-gray-800 ">
                                         <span className="text-gray-400 text-sm">Output</span>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex gap-2">
                                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                                             <span className="text-gray-400 text-sm">Ready</span>
                                         </div>
                                     </div>
                                     <div id="output-display" className="p-4 font-mono text-sm min-h-[100px] bg-gray-800/50">
-                                        <div className="text-gray-400">Click 'Run Code' to see the output</div>
+                                        <div className="block text-left text-gray-400">Click 'Run Code' to see the output</div>
                                     </div>
                                 </div>
 
@@ -173,8 +173,8 @@ int main() {
                                             const outputDisplay = document.getElementById('output-display');
                                             outputDisplay.innerHTML = `
                                                 <div class="animate-fade-in">
-                                                    <div class="text-green-400 mb-2">Program executed successfully!</div>
-                                                    <div class="text-gray-300">
+                                                    <div class="block text-left text-green-400 mb-2">Program executed successfully!</div>
+                                                    <div class="block text-left text-gray-300">
                                                         Welcome to Code Arena!<br>
                                                         Start your coding journey today.
                                                     </div>
