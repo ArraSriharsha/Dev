@@ -200,8 +200,8 @@ int main() {
                                         <Code className="w-8 h-8 text-red-500" />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-semibold mb-2">Secure Code Execution</h3>
-                                        <p className="text-gray-600">Run code safely in isolated Docker containers with real-time compilation</p>
+                                        <h3 className="block text-left text-xl font-semibold mb-2">Secure Code Execution</h3>
+                                        <p className="block text-left text-gray-600">Run code safely in isolated Docker containers with real-time compilation</p>
                                         <div className="mt-4 flex items-center gap-2">
                                             <div className="flex gap-2">
                                                 <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm">Docker</span>
@@ -221,8 +221,8 @@ int main() {
                                         </svg>
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-semibold mb-2">Smart Queue System</h3>
-                                        <p className="text-gray-600">Efficient job processing with real-time status updates</p>
+                                        <h3 className="block text-left text-xl font-semibold mb-2">Smart Queue System</h3>
+                                        <p className="block text-left text-gray-600">Efficient job processing with real-time status updates</p>
                                         <div className="mt-4 flex items-center gap-2">
                                             <div className="flex gap-2">
                                                 <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm">Real-time</span>
@@ -242,8 +242,8 @@ int main() {
                                         </svg>
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-semibold mb-2">AI-Powered Learning</h3>
-                                        <p className="text-gray-600">Get instant feedback and hints from our advanced AI assistant</p>
+                                        <h3 className="block text-left text-xl font-semibold mb-2">AI-Powered Learning</h3>
+                                        <p className="block text-left text-gray-600">Get instant feedback and hints from our advanced AI assistant</p>
                                         <div className="mt-4 flex items-center gap-2">
                                             <div className="flex gap-2">
                                                 <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-sm">Smart Hints</span>
