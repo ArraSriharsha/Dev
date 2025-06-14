@@ -26,9 +26,9 @@ export const submitCode = async (req, res) => {
         await newSubmission.save();
 
         // Add submission to queue
-        await submissionQueue.add({
-            submissionId: newSubmission._id,
-            problemId: newProblem._id,
+        await submissionQueue.add('submission-job', {
+            submissionId: newSubmission._id.toString(),
+            problemId: newProblem._id.toString(),
             code,
             language
         }, {

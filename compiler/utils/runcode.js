@@ -28,7 +28,6 @@ export const generateInputFile = async (rootDir,input) => {
 export const executeCode = async (rootDir, filepath, language, inputfilePath, isSubmission = false) => {
     const jobId = path.basename(filepath).split(".")[0];
     const outPath = path.join(rootDir, `${jobId}.out`);
-    let command;
     let compileCommand;
     let executeCommand;
     let startTime;

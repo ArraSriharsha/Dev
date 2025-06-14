@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getSubmissionsByProblemByUser } from '../services/api';
-import { Clock, Code2, CheckCircle2, XCircle, Loader2, AlertCircle, X } from 'lucide-react';
+import { Clock, Code2, CheckCircle2, XCircle, Loader2, Trophy, X } from 'lucide-react';
 
 const statusStyles = {
     AC: 'bg-green-100 text-green-700 border-green-300',
@@ -86,7 +86,7 @@ const SubmissionsSlider = ({ submissions, isLoading, problemTitle }) => {
                             <div className="flex flex-col items-start min-w-[90px]">
                                 <div className="flex items-center gap-1 text-white/80 text-lg">
                                     <Clock className="h-5 w-5 text-white/80 mr-1" />
-                                    {submission.runtime || '--'}
+                                    {submission.error ? '--' : submission.runtime || '--'}
                                 </div>
                                 <div className="flex items-center gap-1 text-white/80 text-sm mt-1">
                                     <Code2 className="h-3 w-3 text-white/80 mr-1" />
@@ -102,6 +102,10 @@ const SubmissionsSlider = ({ submissions, isLoading, problemTitle }) => {
                             </div>
                             {/* Right: Test Cases Passed */}
                             <div className="flex flex-col items-end min-w-[110px]">
+                                <div className="text-white/80 text-lg font-medium mb-1 flex items-center gap-1">
+                                    <Trophy className="h-5 w-5 text-white/80 mr-1" />
+                                    {submission.score || 0}
+                                </div>
                                 <div className="text-white/80 text-lg font-medium">
                                     {submission.testCasesPassed !== undefined && submission.totalTestCases !== undefined ? (
                                         <span>{submission.testCasesPassed}/{submission.totalTestCases} Passed</span>
@@ -179,7 +183,7 @@ const SubmissionsSlider = ({ submissions, isLoading, problemTitle }) => {
                             </div>
                         </div>
                     </div>
-                    <style jsx>{`
+                    <style>{`
                         @keyframes slideIn {
                             from {
                                 transform: translateX(100%);
