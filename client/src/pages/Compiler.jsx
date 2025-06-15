@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Play, Loader2, ArrowRight, ArrowDown, Wand, X, Code2, Terminal, MessageSquare, SquareMousePointer } from 'lucide-react';
 import { toast } from 'react-toastify';
 import Editor from '@monaco-editor/react';
@@ -15,6 +15,40 @@ const Compiler = () => {
     const [aiReview, setAiReview] = useState(null);
     const [showAiReview, setShowAiReview] = useState(false);
     const [aiLoading, setAiLoading] = useState(false);
+
+    // Boilerplate code for each language
+    const boilerplateCode = {
+        c: `#include <stdio.h>
+
+int main() {
+    // Your code here
+    printf("Hello, World!\\n");
+    return 0;
+}`,
+        cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    // Your code here
+    cout << "Hello, World!" << endl;
+    return 0;
+}`,
+        java: `public class Main {
+    public static void main(String[] args) {
+        // Your code here
+        System.out.println("Hello, World!");
+    }
+}`,
+        js: `// Your code here
+console.log("Hello, World!");`,
+        py: `# Your code here
+print("Hello, World!")`
+    };
+
+    // Set initial code based on selected language
+    useEffect(() => {
+        setCode(boilerplateCode[language]);
+    }, [language]);
 
     const handleAiReview = async () => {
         if (!code.trim()) {
