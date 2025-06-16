@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { signin } from '../services/api'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { Code, Eye, EyeOff } from 'lucide-react'
+import { Code, Eye, EyeOff, Lock, Mail, ArrowRight } from 'lucide-react'
 
 export const Signin = () => {
     const navigate = useNavigate()
@@ -68,56 +68,64 @@ export const Signin = () => {
     };
     
     return (
-
-        <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-white to-red-300">
-            <div className="absolute inset-0 bg-[url('/front.svg')] bg-cover bg-center opacity-50"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-red-100/50"></div>
+        <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-red-50 to-red-100">
+            <div className="absolute inset-0 bg-[url('/front.svg')] bg-cover bg-center opacity-30"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-red-50/80"></div>
             
             <div className="w-full max-w-6xl px-4 py-8 relative z-10">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Left side - Welcome Message */}
-                    <div className="hidden md:block text-gray-800 space-y-6">
+                    <div className="hidden md:block text-gray-800 space-y-8">
                         <div className="flex items-center gap-3 mb-8">
-                            <img src="/logored.svg" alt="Code Arena" className="w-10 h-10" />
-                            <h1 className="text-3xl font-bold">
-                                Code <span className="text-red-500">Arena</span>
+                            <img src="/logored.svg" alt="Code Arena" className="w-12 h-12" />
+                            <h1 className="text-4xl font-bold">
+                                Code <span className="text-red-600">Arena</span>
                             </h1>
                         </div>
-                        <h2 className="text-4xl font-bold leading-tight">
+                        <h2 className="text-5xl font-bold leading-tight">
                             Welcome Back to <br />
-                            <span className="text-red-500">Code Arena</span>
+                            <span className="text-red-600">Code Arena</span>
                         </h2>
-                        <p className="text-gray-900 text-lg font-medium leading-relaxed">
+                        <p className="text-gray-600 text-lg leading-relaxed">
                             Sign in to continue your coding journey. Practice, compete, and conquer challenges with our community of developers.
                         </p>
-                        <div className="mt-8 space-y-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                                    <Code className="w-4 h-4 text-red-500" />
+                        <div className="mt-12 space-y-6">
+                            <div className="flex items-center gap-4 group">
+                                <div className="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors duration-200">
+                                    <Code className="w-6 h-6 text-red-600" />
                                 </div>
-                                <span className="text-gray-900 font-roboto">Access 1000+ coding problems</span>
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-900">1000+ Problems</h3>
+                                    <p className="text-gray-600">Access our extensive problem library</p>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                                    <Code className="w-4 h-4 text-red-500" />
+                            <div className="flex items-center gap-4 group">
+                                <div className="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors duration-200">
+                                    <Code className="w-6 h-6 text-red-600" />
                                 </div>
-                                <span className="text-gray-900 font-roboto">Participate in regular contests</span>
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-900">Regular Contests</h3>
+                                    <p className="text-gray-600">Compete with developers worldwide</p>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                                    <Code className="w-4 h-4 text-red-500" />
+                            <div className="flex items-center gap-4 group">
+                                <div className="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors duration-200">
+                                    <Code className="w-6 h-6 text-red-600" />
                                 </div>
-                                <span className="text-gray-900 font-roboto">Track your progress</span>
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-900">Track Progress</h3>
+                                    <p className="text-gray-600">Monitor your coding journey</p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Right side - Sign In Form */}
-                    <div className="bg-white/80 backdrop-blur-lg hover:scale-105 transition-all duration-300 rounded-2xl p-8 shadow-xl border border-red-100">
+                    <div className="bg-white/80 rounded-3xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl border border-red-500/30 transition-all duration-300">
                         <div className="flex items-center justify-center mb-8 md:hidden">
                             <img src="/logored.svg" alt="Code Arena" className="w-10 h-10 mr-2" />
                             <h1 className="text-2xl font-bold text-gray-800">
-                                Code <span className="text-red-500">Arena</span>
+                                Code <span className="text-red-600">Arena</span>
                             </h1>
                         </div>
 
@@ -125,11 +133,12 @@ export const Signin = () => {
                             <div>
                                 <label className="text-gray-700 text-sm font-medium mb-2 block">Username or Email</label>
                                 <div className="relative">
+                                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                                     <input 
                                         name="login" 
                                         type="text" 
                                         required 
-                                        className="w-full text-gray-800 bg-white border border-red-200 pl-4 pr-10 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200" 
+                                        className="w-full text-gray-800 bg-gray-50 border border-red-500 pl-12 pr-4 py-3.5 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200" 
                                         placeholder="Enter username or email" 
                                         onChange={handleChange} 
                                         value={formData.login}
@@ -140,11 +149,12 @@ export const Signin = () => {
                             <div>
                                 <label className="text-gray-700 text-sm font-medium mb-2 block">Password</label>
                                 <div className="relative">
+                                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                                     <input 
                                         name="password" 
                                         type={showPassword ? "text" : "password"} 
                                         required 
-                                        className="w-full text-gray-800 bg-white border border-red-200 pl-4 pr-10 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200" 
+                                        className="w-full text-gray-800 bg-gray-50 border border-red-500 pl-12 pr-12 py-3.5 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200" 
                                         placeholder="Enter password" 
                                         onChange={handleChange} 
                                         value={formData.password}
@@ -152,7 +162,7 @@ export const Signin = () => {
                                     <button 
                                         type="button" 
                                         onClick={() => setShowPassword(!showPassword)} 
-                                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-red-500 transition-colors duration-200"
+                                        className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-red-500 transition-colors duration-200"
                                     >
                                         {showPassword ? (
                                             <EyeOff className="w-5 h-5" />
@@ -169,35 +179,38 @@ export const Signin = () => {
                                         id="remember-me" 
                                         name="remember-me" 
                                         type="checkbox" 
-                                        className="h-4 w-4 text-red-500 focus:ring-red-500 border-gray-300 rounded" 
+                                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-red-500 rounded" 
                                     />
                                     <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-600">
                                         Remember me
                                     </label>
                                 </div>
-                                <Link to="/forgot-password" className="text-sm text-red-500 hover:underline hover:text-red-600 transition-colors duration-200">
+                                <Link to="/forgot-password" className="text-sm text-red-600 hover:text-red-700 font-medium transition-colors duration-200">
                                     Forgot password?
                                 </Link>
                             </div>
 
                             <button 
                                 type="submit" 
-                                className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                                className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3.5 rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2" 
                                 disabled={isLoading}
                             >
                                 {isLoading ? (
-                                    <div className="flex items-center justify-center gap-2">
+                                    <>
                                         <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                                         Signing in...
-                                    </div>
+                                    </>
                                 ) : (
-                                    'Sign in'
+                                    <>
+                                        Sign in
+                                        <ArrowRight className="w-5 h-5" />
+                                    </>
                                 )}
                             </button>
 
                             <p className="text-center text-sm text-gray-600">
                                 Don't have an account?{' '}
-                                <Link to="/signup" className="text-red-500 hover:underline hover:text-red-600 transition-colors duration-200 font-medium">
+                                <Link to="/signup" className="text-red-600 hover:text-red-700 font-medium transition-colors duration-200">
                                     Register Here!
                                 </Link>
                             </p>
