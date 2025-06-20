@@ -5,6 +5,10 @@ A modern online coding platform that allows users to practice coding problems, s
 
 ![CodeArena](https://github.com/ArraSriharsha/Dev/blob/main/Home.png)
 
+## 📽️ Demo Video
+
+[Click here to watch the demo](https://www.loom.com/share/b0229c86986d4e2083c2d8c4efaca597)
+
 ## 📝 Description
 
 Welcome to CodeArena, an Online Judge Platform, a comprehensive coding practice environment designed for developers of all skill levels. This platform combines the power of modern web technologies with advanced AI capabilities to provide an engaging and educational coding experience.
